@@ -1,0 +1,31 @@
+.textareas {
+    display: flex;
+    flex-direction: column;
+}
+
+.textarea {
+    resize: none;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 35vh;
+}
+
+.cont {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 15vh;
+}
+
+h5 {
+    margin: 0;
+}
+
+a {
+    margin: 0;
+}

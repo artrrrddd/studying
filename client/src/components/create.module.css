@@ -1,0 +1,19 @@
+.textInputs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.select {
+    font-size: large;
+    min-width: 200px;
+    padding: 8px 12px;
+    cursor: pointer;
+    appearance: auto;
+}
+
+.textInputs textarea {
+    font-size: 25px;
+}

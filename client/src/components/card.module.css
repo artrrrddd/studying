@@ -1,0 +1,44 @@
+.cardFront {
+    display: flex;
+    width: 300px;
+    height: 400px;
+    background-color: crimson;
+    justify-content: center;
+    align-items: center;
+    border-radius: 14px;
+    transition: -webkit-transform 0.5s;
+    font-size: 25px;
+}
+
+.cardFront:hover {
+    color: white
+}
+
+.cardsBack {
+    font-size: 25px;
+    display: flex;
+    width: 300px;
+    height: 400px;
+    border-radius: 14px;
+    background-color: green;
+    justify-content: center;
+    align-items: center;
+    transition: -webkit-transform 0.5s;
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+}
+
+.cardsBack:hover {
+    color: white;
+}
+
+.container {
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.flipped {
+    transition: -webkit-transform 0.5s;
+    transform: rotateY(180deg);
+}

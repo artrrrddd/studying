@@ -1,0 +1,120 @@
+.cont {
+    position: relative;
+    min-height: 5vh;
+    background: crimson;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 70vw;
+    margin-bottom: 5vh;
+    border-radius: 8px;
+}
+
+.cont.button {
+    height: 100px;
+}
+
+.burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    margin-right: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.burgerLine {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: #fff;
+    border-radius: 2px;
+}
+
+.menuPanel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.nav {
+    margin-left: 5%;
+    display: flex;
+    gap: 5px;
+}
+
+.functionalWrap {
+    margin-right: 5%;
+}
+
+.functional {
+    display: flex;
+    gap: 5px;
+}
+
+@media (max-width: 768px) {
+    .burger {
+        display: flex;
+    }
+
+    .menuPanel {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        background: crimson;
+        border-radius: 0 0 8px 8px;
+        padding: 0 12px;
+        gap: 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.2s ease;
+        margin-top: 4px;
+    }
+
+    .menuPanel.menuPanelOpen {
+        max-height: 400px;
+        opacity: 1;
+        padding: 12px;
+    }
+
+    .cont {
+        justify-content: end;
+    }
+
+    .nav {
+        margin: 0;
+        flex-direction: column;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+    }
+
+    .functionalWrap {
+        margin: 0;
+    }
+
+    .functional {
+        flex-direction: column;
+    }
+
+    .nav button,
+    .functional button,
+    .functionalWrap a button {
+        width: 100%;
+        text-align: left;
+        padding: 10px;
+    }
+}
