@@ -1,4 +1,4 @@
-// Если запускаешь локально — подгружаем .env
+// Если локально — загружаем .env
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({
     path: require('path').join(__dirname, '..', 'server', '.env'),
@@ -9,7 +9,22 @@ const mongoose = require('mongoose')
 const app = require('../server/app')
 
 /**
- * Кеш подключения для serverless (Vercel)
+ * ЛОГИ ПОДКЛЮЧЕНИЯ (добавлены сюда)
+ */
+mongoose.connection.on('connected', () => {
+  console.log('✅ Mongo connected')
+})
+
+mongoose.connection.on('error', (err) => {
+  console.log('❌ Mongo error:', err)
+})
+
+mongoose.connection.on('disconnected', () => {
+  console.log('⚠️ Mongo disconnected')
+})
+
+/**
+ * Кеш подключения для Vercel serverless
  */
 let cached = global.mongoose
 
@@ -27,20 +42,19 @@ async function connect() {
     )
   }
 
-  // Если уже подключены — просто возвращаем соединение
   if (cached.conn) {
     return cached.conn
   }
 
-  // Если подключения ещё нет — создаём promise
   if (!cached.promise) {
+    console.log('🔄 Trying to connect to MongoDB...')
+    
     cached.promise = mongoose.connect(process.env.DB_URL, {
       serverSelectionTimeoutMS: 20000,
       connectTimeoutMS: 15000,
       bufferCommands: false,
       maxPoolSize: 5,
     }).then((mongooseInstance) => {
-      console.log('MongoDB connected')
       return mongooseInstance
     }).catch((err) => {
       cached.promise = null
@@ -57,7 +71,7 @@ module.exports = async (req, res) => {
     await connect()
     return app(req, res)
   } catch (err) {
-    console.error('Database connection error:', err)
+    console.error('🔥 Database connection error:', err)
     res.statusCode = 500
     res.end('Database connection failed')
   }
