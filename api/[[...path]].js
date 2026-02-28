@@ -1,46 +1,64 @@
-// Загружаем .env из server (на Vercel переменные берутся из настроек проекта)
-require('dotenv').config({ path: require('path').join(__dirname, '..', 'server', '.env') })
+// Если запускаешь локально — подгружаем .env
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({
+    path: require('path').join(__dirname, '..', 'server', '.env'),
+  })
+}
 
 const mongoose = require('mongoose')
 const app = require('../server/app')
 
-const CONNECTED = 1
+/**
+ * Кеш подключения для serverless (Vercel)
+ */
+let cached = global.mongoose
+
+if (!cached) {
+  cached = global.mongoose = {
+    conn: null,
+    promise: null,
+  }
+}
 
 async function connect() {
   if (!process.env.DB_URL) {
-    throw new Error('DB_URL is not set. Add it in Vercel Project Settings → Environment Variables.')
+    throw new Error(
+      'DB_URL is not set. Add it in Vercel Project Settings → Environment Variables.'
+    )
   }
-  if (mongoose.connection.readyState === CONNECTED) {
-    return
-  }
-  await mongoose.connect(process.env.DB_URL, {
-    serverSelectionTimeoutMS: 20000,
-    connectTimeoutMS: 15000,
-    bufferCommands: false,
-    maxPoolSize: 2,
-  })
-}
 
-function runApp(req, res) {
-  return new Promise((resolve, reject) => {
-    const done = () => {
-      res.off('error', onError)
-      mongoose.disconnect().catch(() => {}).finally(() => resolve())
-    }
-    const onError = (err) => {
-      res.off('finish', done)
-      res.off('close', done)
-      mongoose.disconnect().catch(() => {})
-      reject(err)
-    }
-    res.once('finish', done)
-    res.once('close', done)
-    res.once('error', onError)
-    app(req, res)
-  })
+  // Если уже подключены — просто возвращаем соединение
+  if (cached.conn) {
+    return cached.conn
+  }
+
+  // Если подключения ещё нет — создаём promise
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(process.env.DB_URL, {
+      serverSelectionTimeoutMS: 20000,
+      connectTimeoutMS: 15000,
+      bufferCommands: false,
+      maxPoolSize: 5,
+    }).then((mongooseInstance) => {
+      console.log('MongoDB connected')
+      return mongooseInstance
+    }).catch((err) => {
+      cached.promise = null
+      throw err
+    })
+  }
+
+  cached.conn = await cached.promise
+  return cached.conn
 }
 
 module.exports = async (req, res) => {
-  await connect()
-  return runApp(req, res)
+  try {
+    await connect()
+    return app(req, res)
+  } catch (err) {
+    console.error('Database connection error:', err)
+    res.statusCode = 500
+    res.end('Database connection failed')
+  }
 }
