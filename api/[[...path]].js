@@ -41,7 +41,16 @@ function sendError(res, err) {
 module.exports = async (req, res) => {
   try {
     await connect()
-    getApp()(req, res)
+    const app = getApp()
+    // Дожидаемся завершения ответа Express, иначе Vercel может завершить функцию до отправки
+    await new Promise((resolve, reject) => {
+      const onEnd = () => { resolve(); res.off('error', onError) }
+      const onError = (e) => { reject(e); res.off('finish', onEnd); res.off('close', onEnd) }
+      res.once('finish', onEnd)
+      res.once('close', onEnd)
+      res.once('error', onError)
+      app(req, res)
+    })
   } catch (err) {
     sendError(res, err)
   }
