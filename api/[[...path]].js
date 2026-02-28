@@ -12,29 +12,42 @@ if (!cached) {
 
 const CONNECTED = 1
 
-async function connect() {
-  // В serverless кэшированное подключение могло "уснуть" после заморозки инстанса — проверяем
-  if (cached.conn && mongoose.connection.readyState === CONNECTED) {
-    return cached.conn
+async function isConnectionAlive() {
+  if (mongoose.connection.readyState !== CONNECTED) return false
+  try {
+    await mongoose.connection.db.admin().ping()
+    return true
+  } catch {
+    return false
   }
+}
+
+async function connect() {
   if (!process.env.DB_URL) {
     throw new Error('DB_URL is not set. Add it in Vercel Project Settings → Environment Variables.')
   }
+  // Кэш мог сохранить "мёртвое" соединение после заморозки инстанса — проверяем пингом
+  if (cached.conn && (await isConnectionAlive())) {
+    return cached.conn
+  }
   cached.conn = null
   cached.promise = null
-  cached.promise = mongoose.connect(process.env.DB_URL, {
-    serverSelectionTimeoutMS: 15000,
-    connectTimeoutMS: 10000,
-    bufferCommands: false,
-  }).then((m) => {
-    cached.conn = m
-    return m
-  }).catch((err) => {
+  if (mongoose.connection.readyState === CONNECTED) {
+    try { await mongoose.disconnect() } catch { /* игнор */ }
+  }
+  try {
+    cached.promise = mongoose.connect(process.env.DB_URL, {
+      serverSelectionTimeoutMS: 20000,
+      connectTimeoutMS: 15000,
+      bufferCommands: false,
+      maxPoolSize: 2,
+    })
+    cached.conn = await cached.promise
+    return cached.conn
+  } catch (err) {
     cached.promise = null
     throw err
-  })
-  cached.conn = await cached.promise
-  return cached.conn
+  }
 }
 
 // Оборачиваем Express в Promise, чтобы handler не завершался до отправки ответа (важно для Vercel)
