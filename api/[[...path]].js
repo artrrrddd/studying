@@ -1,16 +1,20 @@
 const mongoose = require('mongoose')
-const app = require('../server/app')
 
-// Кэш подключения к MongoDB для serverless (одно подключение на инстанс)
-let cached = global.mongo
-if (!cached) {
-  cached = global.mongo = { conn: null, promise: null }
+// Ленивая загрузка — если require('../server/app') упадёт при загрузке модуля,
+// мы поймаем ошибку внутри handler и вернём 500 с текстом
+let app
+function getApp() {
+  if (!app) app = require('../server/app')
+  return app
 }
+
+let cached = global.mongo
+if (!cached) cached = global.mongo = { conn: null, promise: null }
 
 async function connect() {
   if (cached.conn) return cached.conn
   if (!process.env.DB_URL) {
-    throw new Error('DB_URL is not set. Add it in Vercel → Project → Settings → Environment Variables.')
+    throw new Error('DB_URL is not set. Add it in Vercel → Settings → Environment Variables.')
   }
   if (!cached.promise) {
     cached.promise = mongoose.connect(process.env.DB_URL).then((m) => m)
@@ -19,15 +23,26 @@ async function connect() {
   return cached.conn
 }
 
+function sendError(res, err) {
+  const msg = err && (err.message || String(err))
+  console.error('Serverless function error:', msg)
+  try {
+    if (!res.headersSent) {
+      res.status(500).json({
+        message: 'Server error',
+        error: process.env.VERCEL ? msg : undefined
+      })
+    }
+  } catch (e) {
+    console.error('Failed to send error response:', e)
+  }
+}
+
 module.exports = async (req, res) => {
   try {
     await connect()
-    return app(req, res)
+    getApp()(req, res)
   } catch (err) {
-    console.error('Serverless function error:', err.message || err)
-    res.status(500).json({
-      message: 'Server error',
-      error: process.env.NODE_ENV === 'production' ? undefined : (err.message || String(err))
-    })
+    sendError(res, err)
   }
 }
