@@ -13,18 +13,9 @@ const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
-// CORS: в продакшене CLIENT_URL должен быть URL фронта по интернету (например https://ваш-сайт.vercel.app).
-// Можно указать несколько через запятую: https://сайт.vercel.app,http://localhost:5174
-const clientUrl = process.env.CLIENT_URL;
-const allowedOrigins = clientUrl
-    ? clientUrl.split(',').map(s => s.trim()).filter(Boolean)
-    : [];
-const corsOrigin = allowedOrigins.length
-    ? (origin, cb) => cb(null, allowedOrigins.includes(origin))
-    : (isProd ? true : undefined);
 app.use(cors({
     credentials: true,
-    origin: corsOrigin
+    origin: process.env.CLIENT_URL || (isProd ? true : undefined)
 }))
 app.use('/api', router)
 
