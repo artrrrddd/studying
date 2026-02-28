@@ -12,12 +12,20 @@ let cached = global.mongo
 if (!cached) cached = global.mongo = { conn: null, promise: null }
 
 async function connect() {
-  if (cached.conn) return cached.conn
   if (!process.env.DB_URL) {
     throw new Error('DB_URL is not set. Add it in Vercel → Settings → Environment Variables.')
   }
+  // Если соединение есть, но разорвано (cold start / таймаут) — сбрасываем кэш и переподключаемся
+  if (cached.conn && mongoose.connection.readyState !== 1) {
+    cached.conn = null
+    cached.promise = null
+  }
+  if (cached.conn) return cached.conn
   if (!cached.promise) {
-    cached.promise = mongoose.connect(process.env.DB_URL).then((m) => m)
+    cached.promise = mongoose.connect(process.env.DB_URL, {
+      serverSelectionTimeoutMS: 15000,
+      bufferCommands: false
+    }).then((m) => m)
   }
   cached.conn = await cached.promise
   return cached.conn
