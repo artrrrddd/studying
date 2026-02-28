@@ -1,5 +1,5 @@
 const UserModel = require('../models/user-model');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const uuid = require('uuid');
 const mailService = require('./mail-service');
 const tokenService = require('./token-service');
@@ -26,6 +26,9 @@ async registration(email, password) {
     const userDto = new UserDto(user);
     const tokens = tokenService.generateToken({...userDto});
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    
+    console.log({ ...tokens, user: userDto }  );
+    
 
     return { ...tokens, user: userDto }  
 }
