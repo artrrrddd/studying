@@ -10,10 +10,6 @@ const SignUp = () => {
 
     const registrationFunc = async () => {
         try {
-            console.log(email);
-            console.log(pwd);
-            
-            
             await AuthService.registration(email, pwd);
             navigate('/auth');
         } catch(e) {
