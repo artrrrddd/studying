@@ -17,11 +17,22 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
   credentials: true,
-  origin: process.env.CLIENT_URL || (isProd ? true : undefined)
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:5173',
+      process.env.CLIENT_URL
+    ]
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
 }))
 app.use('/api', router)
 
-// Статика только при обычном Node-сервере (Render и т.п.), не на Vercel
+// Статика только при обычном Node-сервере, не на Vercel
 if (isProd && !isVercel) {
   const clientDist = path.join(__dirname, '..', 'client', 'dist')
   app.use(express.static(clientDist))
