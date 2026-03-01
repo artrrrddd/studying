@@ -14,9 +14,9 @@ const Create = () => {
     <>
     <div className={s.textInputs}>
         <span>Создание карточки</span>
-        <span>Введите слово</span>
+        <span>Термин</span>
         <textarea ref={word} name="" id=""></textarea>
-        <span>Введите перевод</span>
+        <span>Определение</span>
         <textarea ref={translate} name="" id=""></textarea>
         <span>Выберите язык</span>
         <select ref={select} className={s.select} name="lang" id="lang">
