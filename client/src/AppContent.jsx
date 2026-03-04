@@ -9,6 +9,9 @@ import { checkThunk } from './redux/thunks/authThunks'
 import MyAccount from './components/MyAccount'
 import Header from './components/Header'
 import Cards from './components/Cards'
+import Import from './components/Import'
+import Lessons from './components/Lessons'
+import Lesson from './components/Lesson'
 
 function AppContent() {
   const dispatch = useDispatch()
@@ -27,6 +30,9 @@ function AppContent() {
         <Route path="signup" element={<SignUp />} />
         <Route path="cards" element={<Cards />} />
         <Route path="myAccount" element={<MyAccount />}/>
+        <Route path="import" element={<Import />}/>
+        <Route path="lessons" element={<Lessons/>}/>
+        <Route path="lessons/:id" element={<Lesson/>}/>
       </Routes>
     </BrowserRouter>
   )

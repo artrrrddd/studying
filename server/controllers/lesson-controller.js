@@ -1,8 +1,8 @@
-const cardService = require('../service/card-service');
+const lessonService = require('../service/lesson-service');
 const { validationResult } = require('express-validator');
 const ApiError = require('../exceptions/api-error');
 
-class CardController {
+class LessonController {
   async create(req, res, next) {
     try {
       const errors = validationResult(req);
@@ -11,9 +11,11 @@ class CardController {
           ApiError.BadRequest('Ошибка при валидации', errors.array())
         );
       }
-      const { word, translate, lang } = req.body;
-      const card = await cardService.create(word, translate, lang);
-      return res.json(card);
+
+      const userId = req.user.id;
+      const { title, description, cards } = req.body;
+      const lesson = await lessonService.create(userId, title, description, cards);
+      return res.json(lesson);
     } catch (e) {
       next(e);
     }
@@ -21,18 +23,9 @@ class CardController {
 
   async getAll(req, res, next) {
     try {
-      const cards = await cardService.getAll();
-      return res.json(cards);
-    } catch (e) {
-      next(e);
-    }
-  }
-
-  async getMine(req, res, next) {
-    try {
       const userId = req.user.id;
-      const cards = await cardService.getAllByUser(userId);
-      return res.json(cards);
+      const lessons = await lessonService.getAll(userId);
+      return res.json(lessons);
     } catch (e) {
       next(e);
     }
@@ -40,9 +33,10 @@ class CardController {
 
   async getById(req, res, next) {
     try {
+      const userId = req.user.id;
       const { id } = req.params;
-      const card = await cardService.getById(id);
-      return res.json(card);
+      const lesson = await lessonService.getById(userId, id);
+      return res.json(lesson);
     } catch (e) {
       next(e);
     }
@@ -56,10 +50,16 @@ class CardController {
           ApiError.BadRequest('Ошибка при валидации', errors.array())
         );
       }
+
+      const userId = req.user.id;
       const { id } = req.params;
-      const { word, translate, lang } = req.body;
-      const card = await cardService.update(id, { word, translate, lang });
-      return res.json(card);
+      const { title, description, cards } = req.body;
+      const lesson = await lessonService.update(userId, id, {
+        title,
+        description,
+        cards,
+      });
+      return res.json(lesson);
     } catch (e) {
       next(e);
     }
@@ -67,8 +67,9 @@ class CardController {
 
   async delete(req, res, next) {
     try {
+      const userId = req.user.id;
       const { id } = req.params;
-      await cardService.delete(id);
+      await lessonService.delete(userId, id);
       return res.json({ success: true });
     } catch (e) {
       next(e);
@@ -76,4 +77,5 @@ class CardController {
   }
 }
 
-module.exports = new CardController();
+module.exports = new LessonController();
+

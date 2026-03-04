@@ -1,0 +1,12 @@
+.cont {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.cardWrapper {
+    display: flex;
+    gap: 1vw;
+    flex-wrap: wrap;
+    max-width: 70vw;
+}

@@ -1,0 +1,88 @@
+.textarea {
+    width: 100%;
+    min-height: 30vh;
+    font-size: 2.5vh;
+}
+
+.options {
+    display: flex;
+    justify-content: start;
+}
+
+.cont {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh
+}
+
+.spanWrapper {
+    font-size: large;
+    display: flex;
+    justify-content: start;
+    gap: 1vw;
+    width: 100%;
+    min-height: 15vh;
+    background-color: rgb(118, 118, 118);
+    border-radius: 5px;
+    padding: 0.5vw;
+    box-sizing: border-box;
+}
+
+.previewWrapper {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.previewHeader {
+    display: flex;
+    align-items: center;
+    gap: 2.5vw;
+}
+
+.coloredBG {
+    display: flex;
+    padding: 1vw;
+    height: 100%;
+    background-color: #2B74B7;
+    border-radius: 5px;
+}
+
+
+.previewContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+.btn {
+    margin-top: 2vh
+}
+
+.modalWrapper {
+    gap: 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 990;
+    background-color: black;
+    padding: 2vw 3vw 3vw 3vw;
+    border-radius: 7px;
+    position: fixed;
+    top: 10vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 75vw;
+    max-height: 80vh;
+}
+
+.modalWrapper::-webkit-scrollbar {
+    width: 0;
+}
+
+.btnClose {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}

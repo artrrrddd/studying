@@ -15,7 +15,6 @@ const Cards = () => {
     
     return (
         <div className={s.wrap}>
-            <div>{console.log(data)}</div>
         {data.map((e) => <Card word={e.word} translate={e.translate} />
         )}
         </div>

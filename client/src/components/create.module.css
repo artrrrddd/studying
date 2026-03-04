@@ -17,3 +17,11 @@
 .textInputs textarea {
     font-size: 25px;
 }
+
+.previewWrapper {
+    justify-content: center;
+    display: flex;
+    gap: 1vw;
+    max-width: 70vw;
+    flex-wrap: wrap;
+}

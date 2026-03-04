@@ -59,3 +59,14 @@ export const updateCardThunk = createAsyncThunk(
         }
     }
 );
+
+export const fetchMyCardsThunk = createAsyncThunk(
+    "cards/fetchMine",
+    async (_, { rejectWithValue }) => {
+      try {
+        return await CardService.getMine();
+      } catch (e) {
+        return rejectWithValue(e.response?.data?.message || "Ошибка загрузки карточек");
+      }
+    }
+  );

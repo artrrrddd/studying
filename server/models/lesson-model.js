@@ -1,7 +1,18 @@
-// const { Schema, model } = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-// const CardSchema = new Schema({
-//     name: { type: String, required: true },
-//     `   `
-// }, { timestamps: true })
-//   odule.exports = model('Card', CardSchema)
+const LessonSchema = new Schema(
+  {
+    title: { type: String, required: true },
+    description: { type: String },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    cards: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Card',
+      },
+    ],
+  },
+  { timestamps: true }
+);
+
+module.exports = model('Lesson', LessonSchema);

@@ -12,6 +12,7 @@ const cardReducer = (state = initialState, action) => {
         case "cards/create/pending":
         case "cards/update/pending":
         case "cards/delete/pending":
+        case "cards/fetchMine/pending":
             return { ...state, isLoading: true, error: null };
 
         case "cards/fetchAll/fulfilled":
@@ -21,6 +22,7 @@ const cardReducer = (state = initialState, action) => {
             return { ...state, isLoading: false, error: action.payload };
 
         case "cards/fetchById/fulfilled":
+        case "cards/fetchMine/fulfilled":
             return { ...state, isLoading: false, currentCard: action.payload, error: null };
 
         case "cards/fetchById/rejected":
@@ -30,6 +32,7 @@ const cardReducer = (state = initialState, action) => {
             return { ...state, isLoading: false, items: [action.payload, ...state.items], error: null };
 
         case "cards/create/rejected":
+        case "cards/fetchMine/rejected":
             return { ...state, isLoading: false, error: action.payload };
 
         case "cards/update/fulfilled": {

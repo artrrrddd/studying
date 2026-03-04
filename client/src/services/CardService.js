@@ -26,4 +26,9 @@ export default class CardService {
         return $api.patch(`/cards/${id}`, { word, translate, lang })
             .then(response => response.data);
     }
+    
+    static getMine() {
+        return $api.get('/my/cards')
+          .then(response => response.data);
+      }
 }
