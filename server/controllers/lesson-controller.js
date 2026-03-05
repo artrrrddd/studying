@@ -42,7 +42,6 @@ class LessonController {
   }
 
   async getById(req, res, next) {
-    console.log('Requested lesson ID:', req.params.id); // что реально приходит
 
     
     try {

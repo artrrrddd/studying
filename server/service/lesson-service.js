@@ -76,7 +76,7 @@ async getById(id) {
   }
 
   // findById сам преобразует строку в ObjectId
-  const lesson = await LessonModel.findById(id);
+  const lesson = await LessonModel.findById(id).populate('cards');
 
   if (!lesson) {
     throw ApiError.BadRequest('Урок не найден');
