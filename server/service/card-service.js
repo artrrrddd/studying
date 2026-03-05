@@ -40,7 +40,7 @@ class CardService {
   }
 
   async getById(id) {
-    const card = await CardModel.findById({ _id: new mongoose.Types.ObjectId(id) });
+    const card = await CardModel.findById(new mongoose.Types.ObjectId(id));
     if (!card) {
       throw ApiError.BadRequest('Карточка не найдена');
     }
