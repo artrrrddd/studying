@@ -59,6 +59,9 @@ class LessonService {
   }
 
   async getMine(userId) {
+
+    console.log(userId);
+    
     const lessons = await LessonModel.find({ user: mongoose.Types.ObjectId(userId) })
       .sort({ createdAt: -1 });
 
