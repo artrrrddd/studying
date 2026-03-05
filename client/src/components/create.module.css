@@ -25,3 +25,31 @@
     max-width: 70vw;
     flex-wrap: wrap;
 }
+
+.successModal {
+    border-radius: 1vw;
+    width: 25vw;
+    height:30vh;
+    background-color: rgba(0, 128, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+}
+
+.successSpan {
+    width: 100%
+}

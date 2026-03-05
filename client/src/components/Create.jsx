@@ -1,5 +1,5 @@
 import s from './create.module.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useRef } from 'react'
 import {Link} from 'react-router-dom'
 import Import from './Import'
@@ -9,6 +9,8 @@ import { createLessonThunk } from '../redux/thunks/lessonThunks'
 import { useEffect } from 'react'
 
 const Create = () => {
+
+    const createSuccess = useSelector(s => s.lessons.createSuccess)
 
     const [imported, setImported] = useState([])
 
@@ -22,11 +24,22 @@ const Create = () => {
         })])
         setImported([])
         }
-    },[imported])
+
+        if (createSuccess) {
+            word.current.value = '';
+            description.current.value = '';
+            lessonName.current.value = '';
+            select.current.value = null;
+            translate.current.value = '';
+        }
+
+    },[imported, createSuccess])
 
     const addCard = (card) => {
         // dispatch(createCardThunk({word: word.current.value, translate: translate.current.value, lang: select.current.value}))
         setLesson(prev => [...prev, card])
+        word.current.value = '';
+        translate.current.value = '';
         
     }
 
@@ -35,11 +48,11 @@ const Create = () => {
         const cards = lesson.map(e => {
             return {...e, lang: select.current.value}  
         })
-
+        
         dispatch(createLessonThunk(
             {
-                title: lessonName.current.value,
-                description: description.current.value,
+                title: lessonName.current.value || alert('Добавьте название урока'),
+                description: description.current.value || '',
                 cards: cards
             }
         ))
@@ -65,6 +78,10 @@ const Create = () => {
     //     })]) : null
     
     // console.log(lesson);
+
+    const resetFlag = () => {
+        dispatch({type: 'lessons/resetFlags'})
+    }
     
     return (
     <>
@@ -98,6 +115,17 @@ const Create = () => {
         })}
 
         </div>
+        {createSuccess ?
+        <div className={s.successModal}>
+        <div
+        onClick={() => resetFlag()}
+        className={s.overlay}>
+            <span className={s.successSpan}>
+                Урок создан Ура
+            </span> 
+        </div>
+        </div>
+            : null}
         <button onClick={() => approve()}>Подтвердить и создать урок</button>
         {importIsOpen ? <Import setter={setImportIsOpen} import={setImported}/> : <></>}
     </div>

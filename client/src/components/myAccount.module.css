@@ -4,3 +4,8 @@
     height: 50vh;
     background-color: #2B74B7;
 }
+
+.cont {
+    display: flex;
+    flex-direction: column;
+}

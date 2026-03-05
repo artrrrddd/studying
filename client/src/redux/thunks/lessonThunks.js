@@ -4,6 +4,7 @@ import LessonService from "../../services/LessonService";
 export const fetchLessonsThunk = createAsyncThunk(
   "lessons/fetchAll",
   async (_, { rejectWithValue }) => {
+    
     try {
       return await LessonService.getAll();
     } catch (e) {

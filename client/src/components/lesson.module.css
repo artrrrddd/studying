@@ -1,12 +1,111 @@
 .cont {
     display: flex;
     flex-direction: column;
+    gap: 2vh;
 }
 
 
 .cardWrapper {
+    justify-content: center;
     display: flex;
     gap: 1vw;
     flex-wrap: wrap;
     max-width: 70vw;
+}
+
+.spanWrapper {
+    font-size: large;
+    display: flex;
+    justify-content: start;
+    gap: 1vw;
+    width: 100%;
+    min-height: 15vh;
+    background-color: rgb(118, 118, 118);
+    border-radius: 5px;
+    padding: 0.5vw;
+    box-sizing: border-box;
+}
+
+.previewWrapper {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.coloredBG {
+    display: flex;
+    padding: 1vw;
+    height: 100%;
+    background-color: #2B74B7;
+    border-radius: 5px;
+}
+
+
+.previewContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+.buttonsCont {
+    gap: 1vw;
+    display: flex;
+    width: 100%;
+    justify-content: end;
+}
+
+.shareSuccesss {
+    display: flex;
+    width: 20vw;
+    height: 20vh;
+    background-color: black;
+}
+
+.succesHandlerCont {
+    justify-content: end;
+    display: flex;
+    width: 100%;
+    color: lime;
+    height: 1vh;
+
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.successText.enter { animation: fadeIn 0.5s }
+.successText.exit { animation: fadeOut 0.5s }
+
+.successText {
+  animation: fadeIn 2s ease-out forwards;
+  animation: fadeOut 2s ease-in forwards
+}
+
+.answersCont {
+    display: flex;
+    justify-content: center;
+    gap: 1vw;
+}
+
+.endBtnCont {
+    display: flex;
+    justify-content: center;
+    gap: 1vw;
 }

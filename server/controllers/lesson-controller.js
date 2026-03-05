@@ -31,11 +31,20 @@ class LessonController {
     }
   }
 
-  async getById(req, res, next) {
+    async getMine(req, res, next) {
     try {
       const userId = req.user.id;
+      const lessons = await lessonService.getMine(userId);
+      return res.json(lessons);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getById(req, res, next) {
+    try {
       const { id } = req.params;
-      const lesson = await lessonService.getById(userId, id);
+      const lesson = await lessonService.getById(id);
       return res.json(lesson);
     } catch (e) {
       next(e);

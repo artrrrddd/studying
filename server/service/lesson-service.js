@@ -51,6 +51,14 @@ class LessonService {
   }
 
   async getAll(userId) {
+    const lessons = await LessonModel.find()
+      .populate('cards')
+      .sort({ createdAt: -1 });
+
+    return lessons.map((l) => new LessonDto(l));
+  }
+
+  async getMine(userId) {
     const lessons = await LessonModel.find({ user: userId })
       .populate('cards')
       .sort({ createdAt: -1 });
@@ -58,8 +66,8 @@ class LessonService {
     return lessons.map((l) => new LessonDto(l));
   }
 
-  async getById(userId, id) {
-    const lesson = await LessonModel.findOne({ _id: id, user: userId }).populate(
+  async getById(id) {
+    const lesson = await LessonModel.findOne({ _id: id}).populate(
       'cards'
     );
     if (!lesson) {

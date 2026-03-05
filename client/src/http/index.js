@@ -20,17 +20,17 @@ $api.interceptors.response.use((config) => {
 }, async (error) => {
     const originalRequest = error.config;
     
-    // Не пытаться обновлять токен при 401 с логина/регистрации/refresh — иначе «неверный пароль» превращается в «не авторизован»
-    const path = (originalRequest.url || '').replace(API_URL, '').replace(/^\//, '') || '';
-    const isAuthEndpoint = ['login', 'registration', 'refresh'].some((p) => path === p || path.startsWith(p + '/'));
-    if (error.response?.status === 401 && !originalRequest._isRetry && !isAuthEndpoint) {
+    // // Не пытаться обновлять токен при 401 с логина/регистрации/refresh — иначе «неверный пароль» превращается в «не авторизован»
+    // const path = (originalRequest.url || '').replace(API_URL, '').replace(/^\//, '') || '';
+    // const isAuthEndpoint = ['login', 'registration', 'refresh'].some((p) => path === p || path.startsWith(p + '/'));
+    if (error.response?.status === 401 && !originalRequest._isRetry) {
         originalRequest._isRetry = true;
         try {
             const response = await axios.get(`${API_URL}/refresh`, { withCredentials: true });
             localStorage.setItem('token', response.data.accessToken);
             return $api.request(originalRequest);
         } catch {
-            console.log('НЕ АВТОРИЗОВАН');
+            console.log('Не авторизован');
         }
     }
     

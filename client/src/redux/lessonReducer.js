@@ -1,38 +1,76 @@
 const initialState = {
   items: [],
   currentLesson: null,
-  isLoading: false,
+
+  fetchAllIsLoading: false,
+  fetchByIdIsLoading: false,
+  createIsLoading: false,
+  updateIsLoading: false,
+  deleteIsLoading: false,
+  fetchMineIsLoading: false,
+
+  fetchAllSuccess: false,
+  fetchByIdSuccess: false,
+  createSuccess: false,
+  updateSuccess: false,
+  deleteSuccess: false,
+  fetchMineSuccess: false,
+
+  fetchAllRejected: false,
+  fetchByIdRejected: false,
+  createRejected: false,
+  updateRejected: false,
+  deleteRejected: false,
+  fetchMineRejected: false,
+
   error: null,
 };
 
 const lessonReducer = (state = initialState, action) => {
   switch (action.type) {
     case "lessons/fetchAll/pending":
+      return { ...state, fetchAllIsLoading: true, error: null };
     case "lessons/fetchById/pending":
+      return { ...state, fetchByIdIsLoading: true, error: null };
     case "lessons/create/pending":
+      return { ...state, createIsLoading: true, error: null };
     case "lessons/update/pending":
+      return { ...state, updateIsLoading: true, error: null };
     case "lessons/delete/pending":
+      return { ...state, deleteIsLoading: true, error: null };
     case "lessons/fetchMine/pending":
-      return { ...state, isLoading: true, error: null };
+      return { ...state, fetchMineIsLoading: true, error: null };
 
     case "lessons/fetchAll/fulfilled":
-      case "lessons/fetchMine/fulfilled":
       return {
         ...state,
-        isLoading: false,
+        fetchAllSuccess: true,
+        fetchAllIsLoading: false,
+        items: action.payload,
+        error: null,
+      };
+
+    case "lessons/fetchMine/fulfilled":
+      
+      return {
+        ...state,
+        fetchMineSuccess: true,
+        fetchMineIsLoading: false,
         items: action.payload,
         error: null,
       };
 
     case "lessons/fetchAll/rejected":
+      return { ...state, fetchAllRejected: true, fetchAllIsLoading: false, error: action.payload };
+
     case "lessons/fetchMine/rejected":
-      
-      return { ...state, isLoading: false, error: action.payload };
+      return { ...state, fetchMineRejected: true, fetchMineIsLoading: false, error: action.payload };
 
     case "lessons/fetchById/fulfilled":      
       return {
         ...state,
-        isLoading: false,
+        fetchByIdSuccess: true,
+        fetchByIdIsLoading: false,
         currentLesson: action.payload,
         error: null,
       };
@@ -40,7 +78,8 @@ const lessonReducer = (state = initialState, action) => {
     case "lessons/fetchById/rejected":
       return {
         ...state,
-        isLoading: false,
+        fetchByIdRejected: true,
+        fetchByIdIsLoading: false,
         currentLesson: null,
         error: action.payload,
       };
@@ -48,13 +87,14 @@ const lessonReducer = (state = initialState, action) => {
     case "lessons/create/fulfilled":
       return {
         ...state,
-        isLoading: false,
+        createSuccess: true,
+        createIsLoading: false,
         items: [action.payload, ...state.items],
         error: null,
       };
 
     case "lessons/create/rejected":
-      return { ...state, isLoading: false, error: action.payload };
+      return { ...state, createRejected: true, createIsLoading: false, error: action.payload };
 
     case "lessons/update/fulfilled": {
       const items = state.items.map((l) =>
@@ -62,7 +102,8 @@ const lessonReducer = (state = initialState, action) => {
       );
       return {
         ...state,
-        isLoading: false,
+        updateSuccess: true,
+        updateIsLoading: false,
         items,
         currentLesson:
           state.currentLesson?.id === action.payload.id
@@ -73,12 +114,13 @@ const lessonReducer = (state = initialState, action) => {
     }
 
     case "lessons/update/rejected":
-      return { ...state, isLoading: false, error: action.payload };
+      return { ...state, updateRejected: true, updateIsLoading: false, error: action.payload };
 
     case "lessons/delete/fulfilled":
       return {
         ...state,
-        isLoading: false,
+        deleteSuccess: true,
+        deleteIsLoading: false,
         items: state.items.filter((l) => l.id !== action.payload),
         currentLesson:
           state.currentLesson?.id === action.payload ? null : state.currentLesson,
@@ -86,12 +128,38 @@ const lessonReducer = (state = initialState, action) => {
       };
 
     case "lessons/delete/rejected":
-      return { ...state, isLoading: false, error: action.payload };
+      return { ...state, deleteRejected: true, deleteIsLoading: false, error: action.payload };
 
+    case "lessons/resetFlags":
+  return {
+    ...state,
+    fetchAllIsLoading: false,
+    fetchByIdIsLoading: false,
+    createIsLoading: false,
+    updateIsLoading: false,
+    deleteIsLoading: false,
+    fetchMineIsLoading: false,
+    
+    fetchAllSuccess: false,
+    fetchByIdSuccess: false,
+    createSuccess: false,
+    updateSuccess: false,
+    deleteSuccess: false,
+    fetchMineSuccess: false,
+    
+    fetchAllRejected: false,
+    fetchByIdRejected: false,
+    createRejected: false,
+    updateRejected: false,
+    deleteRejected: false,
+    fetchMineRejected: false,
+    
+    error: null,
+  };
+  
     default:
       return state;
   }
 };
 
 export default lessonReducer;
-
