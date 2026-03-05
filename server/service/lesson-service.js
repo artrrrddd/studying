@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const LessonModel = require('../models/lesson-model');
 const LessonDto = require('../dtos/lesson-dto');
 const ApiError = require('../exceptions/api-error');
