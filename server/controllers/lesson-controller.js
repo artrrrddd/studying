@@ -42,6 +42,8 @@ class LessonController {
   }
 
   async getById(req, res, next) {
+    console.log(req.params);
+    
     try {
       const { id } = req.params;
       const lesson = await lessonService.getById(id);
