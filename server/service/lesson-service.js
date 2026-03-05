@@ -70,7 +70,7 @@ class LessonService {
   }
 
   async getById(id) {
-    const lesson = await LessonModel.findOne({ _id: id}).populate(
+    const lesson = await LessonModel.findById(id).populate(
       'cards'
     );
     if (!lesson) {
