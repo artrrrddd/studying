@@ -12,6 +12,9 @@ const Lesson = () => {
     const [remaining, setRemaining] = useState(lesson?.cards)
     
     const { id } = useParams()
+
+    console.log(id);
+    
     
     const dispatch = useDispatch()
     
