@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 
 const Lessons = () => {
 
-    const lessons = useSelector(s => s.lessons.myItems) || []
+    const lessons = useSelector(s => s.lessons.items) || []
 
     const dispatch = useDispatch()
     useEffect(() => {

@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const MyAccount = () => {
 
     const dispatch = useDispatch();
-    const lessons = useSelector((state) => state.lessons.items);
+    const lessons = useSelector((state) => state.lessons.myItems) || [];
 
     useEffect(() => {
         dispatch(fetchMyLessonsThunk());
@@ -16,7 +16,7 @@ const MyAccount = () => {
     return (
         <div className={s.wrapper}>
             <div><h2>Мои уроки:</h2>
-                {lessons?.length ? lessons.map((e) =>
+                {lessons?.length > 0 ? lessons.map((e) =>
                 <div className={s.cont}>
                     <Link to={`/lessons/${e.id}`}>
                 <div key={e.id}>{e.title}</div>
