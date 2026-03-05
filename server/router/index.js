@@ -50,7 +50,7 @@ router.post(
 );
 
 router.get('/lessons', authMiddleware, LessonController.getAll);
-router.get('/my/lessons', authMiddleware, LessonController.getMine);
+router.get('/myLessons', authMiddleware, LessonController.getMine);
 router.get('/lessons/:id', authMiddleware, LessonController.getById);
 
 router.patch(
