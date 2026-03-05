@@ -26,6 +26,6 @@ export default class LessonService {
   }
 
   static getMine() {
-    return $api.get("/my/lessons").then((response) => response.data);
+    return $api.get("/myLessons").then((response) => response.data);
   }
 }
