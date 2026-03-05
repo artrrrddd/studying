@@ -70,9 +70,7 @@ class LessonService {
   }
 
   async getById(id) {
-    const lesson = await LessonModel.findById(new mongoose.Types.ObjectId(id)).populate(
-      'cards'
-    );
+    const lesson = await LessonModel.findById(new mongoose.Types.ObjectId(id));
     if (!lesson) {
       throw ApiError.BadRequest('Урок не найден');
     }
