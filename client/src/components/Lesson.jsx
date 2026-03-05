@@ -42,10 +42,7 @@ const Lesson = () => {
         }
 
         console.log(lesson);
-        
-
-        const [currentCard, setCurrentCard] = useState(remaining?.[0])
-        
+                
         const [errors, setErrors] = useState([])
     
     const swipe = (answer, currentCard) => {

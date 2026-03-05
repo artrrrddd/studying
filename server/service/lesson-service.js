@@ -81,7 +81,8 @@ async getById(id) {
   if (!lesson) {
     throw ApiError.BadRequest('Урок не найден');
   }
-
+  console.log(lesson);
+  
   return new LessonDto(lesson);
 }
 
