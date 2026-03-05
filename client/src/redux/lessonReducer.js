@@ -1,5 +1,6 @@
 const initialState = {
   items: [],
+  myItems: [],
   currentLesson: null,
 
   fetchAllIsLoading: false,
@@ -56,7 +57,7 @@ const lessonReducer = (state = initialState, action) => {
         ...state,
         fetchMineSuccess: true,
         fetchMineIsLoading: false,
-        items: action.payload,
+        myItems: action.payload,
         error: null,
       };
 
