@@ -63,7 +63,7 @@ class LessonService {
 
     console.log(userId);
     
-    const lessons = await LessonModel.find({ user: mongoose.Types.ObjectId(userId) })
+    const lessons = await LessonModel.find({ user: new mongoose.Types.ObjectId(userId) })
       .sort({ createdAt: -1 });
 
     return lessons.map((l) => new LessonDto(l));
