@@ -1,1 +1,1 @@
-{"name":"quizlet-app","private":true,"scripts":{"build":"cd client && npm install && npm run build && cd ../server && npm install","start":"cd server && node index.js","dev:client":"cd client && npm run dev","dev:server":"cd server && npm run dev"}}
+{"name":"quizlet-app","private":true,"scripts":{"build":"cd client && npm install && npm run build && cd ../server && npm install","start":"cd server && node index.js","dev:client":"cd client && npm run dev","dev:server":"cd server && npm run dev"},"dependencies":{"serverless":"^4.33.0","serverless-http":"^4.0.0"}}
