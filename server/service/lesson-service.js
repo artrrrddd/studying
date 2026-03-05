@@ -59,7 +59,7 @@ class LessonService {
   }
 
   async getMine(userId) {
-    const lessons = await LessonModel.find({ user: userId })
+    const lessons = await LessonModel.find({ user: mongoose.Types.ObjectId(userId) })
       .populate('cards')
       .sort({ createdAt: -1 });
 

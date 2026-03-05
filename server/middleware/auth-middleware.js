@@ -21,7 +21,7 @@ if (!userData) {
 
 req.user = userData;
 next();
-
+console.log('userData from token:', userData)
     } catch(e) {
         return next(ApiError.UnauthorizedError());
     }
