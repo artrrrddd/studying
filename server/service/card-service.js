@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const CardModel = require('../models/card-model');
 const CardDto = require('../dtos/card-dto');
 const ApiError = require('../exceptions/api-error');
@@ -39,7 +40,7 @@ class CardService {
   }
 
   async getById(id) {
-    const card = await CardModel.findById(id);
+    const card = await CardModel.findById({ _id: new mongoose.Types.ObjectId(id) });
     if (!card) {
       throw ApiError.BadRequest('Карточка не найдена');
     }
