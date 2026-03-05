@@ -69,13 +69,21 @@ class LessonService {
     return lessons.map((l) => new LessonDto(l));
   }
 
-  async getById(id) {
-    const lesson = await LessonModel.findById(new mongoose.Types.ObjectId(id));
-    if (!lesson) {
-      throw ApiError.BadRequest('Урок не найден');
-    }
-    return new LessonDto(lesson);
+async getById(id) {
+  // Проверяем, валидный ли ObjectId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw ApiError.BadRequest('Некорректный ID урока');
   }
+
+  // findById сам преобразует строку в ObjectId
+  const lesson = await LessonModel.findById(id);
+
+  if (!lesson) {
+    throw ApiError.BadRequest('Урок не найден');
+  }
+
+  return new LessonDto(lesson);
+}
 
   async update(userId, id, { title, description, cards }) {
     const lesson = await LessonModel.findOne({ _id: id, user: userId });
