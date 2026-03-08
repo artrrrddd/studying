@@ -9,6 +9,8 @@ const Lessons = () => {
 
     const lessons = useSelector(s => s.lessons.items) || []
 
+    const isLoading = useSelector(s=> s.lessons.fetchAllIsLoading)
+
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(fetchLessonsThunk())
@@ -16,15 +18,17 @@ const Lessons = () => {
 
     return (
         <div>
-            {lessons.length > 0 ? (
-                lessons.map(e => (
-                    <div key={e.id}>
-                        <Link to={`/lessons/${e.id}`}>
-                            {e.title}
-                        </Link>
-                    </div>
-                ))
-            ) : (
+            {
+            isLoading ? 'Загрузка...' : 
+                lessons.length > 0 ? (
+                    lessons.map(e => (
+                        <div key={e.id}>
+                            <Link to={`/lessons/${e.id}`}>
+                                {e.title}
+                            </Link>
+                        </div>
+                    ))
+                ) : (
                 <div>Уроков пока нет</div>
             )}
         </div>

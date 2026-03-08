@@ -24,24 +24,24 @@ const MemorizingMode = (props) => {
                                         <div className={s.botSection}>
                                             <div className={s.leftBtns}>
                                                 {props.randomAnswers?.length > 0 && <button
-                                                    style={{ backgroundColor: props.getBtnColor(props.randomAnswers[0]) }}
+                                                    style={{ border: props.getBtnColor(props.randomAnswers[0]) }}
                                                     key={0}
                                                     onClick={() => props.pickChoice(props.randomAnswers[0], props.remaining?.[0], props.randomAnswers)}
                                                 >{'1)'} {props.randomAnswers[0]}</button>}
                                                 {props.randomAnswers?.length > 1 && <button
-                                                    style={{ backgroundColor: props.getBtnColor(props.randomAnswers[1]) }}
+                                                    style={{ border: props.getBtnColor(props.randomAnswers[1]) }}
                                                     key={1}
                                                     onClick={() => props.pickChoice(props.randomAnswers[1], props.remaining?.[0], props.randomAnswers)}
                                                 >{'2)'} {props.randomAnswers[1]}</button>}
                                             </div>
                                             <div className={s.rightBtns}>
                                                 {props.randomAnswers?.length > 2 && <button
-                                                    style={{ backgroundColor: props.getBtnColor(props.randomAnswers[2]) }}
+                                                    style={{ border: props.getBtnColor(props.randomAnswers[2]) }}
                                                     key={2}
                                                     onClick={() => props.pickChoice(props.randomAnswers[2], props.remaining?.[0], props.randomAnswers)}
                                                 >{'3)'} {props.randomAnswers[2]}</button>}
                                                 {props.randomAnswers?.length > 3 && <button
-                                                    style={{ backgroundColor: props.getBtnColor(props.randomAnswers[3]) }}
+                                                    style={{ border: props.getBtnColor(props.randomAnswers[3]) }}
                                                     key={3}
                                                     onClick={() => props.pickChoice(props.randomAnswers[3], props.remaining?.[0], props.randomAnswers)}
                                                 >{'4)'} {props.randomAnswers[3]}</button>}

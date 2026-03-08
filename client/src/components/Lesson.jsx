@@ -126,8 +126,8 @@ useEffect(() => {
     const getBtnColor = (word) => {
 
         if (!correct.correct) return
-        if(word === correct.correct) return 'rgba(0, 255, 0, 0.4)'
-        if(word === correct.choice) return 'rgba(255, 0, 0, 0.4)'
+        if(word === correct.correct) return '2px dashed green'
+        if(word === correct.choice) return '2px dashed red'
         return ''
     }
 

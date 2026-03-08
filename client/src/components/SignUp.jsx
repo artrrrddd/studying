@@ -23,8 +23,8 @@ const SignUp = () => {
     return (
         <div className={s.page}>
             <div className={s.cont}>
-                {error && <div style={{color: 'red'}}>{error}</div>}
                 <div className={s.textareas}>
+                {error && <div className={s.error} style={{color: 'red'}}>{error}</div>}
                     <input 
                         className={s.textarea} 
                         type="email"
@@ -40,10 +40,10 @@ const SignUp = () => {
                         placeholder="Password" 
                         minLength={3}
                     />
-                </div>
                 <button onClick={registrationFunc}>
                     Зарегестрироваться
                 </button>
+                </div>
                 <h5>Уже зарегестрированы?</h5>
                 <Link to="/auth">
                     <a>Войти</a>

@@ -30,8 +30,8 @@ const AuthPage = () => {
     return (
         <div className={s.page}>
             <div className={s.cont}>
-                {error && <div style={{color: 'red'}}>{error}</div>}
                 <div className={s.textareas}>
+                    {error && <div className={s.error} style={{color: 'red'}}>{error}</div>}
                     <input 
                         className={s.textarea} 
                         type="email"
@@ -47,10 +47,10 @@ const AuthPage = () => {
                         placeholder="Password" 
                         minLength={3}
                     />
-                </div>
                 <button onClick={loginFunc}>
                     {isLoading ? 'Загрузка...' : 'Войти'}
                 </button>
+                </div>
                 <h5>Еще не зарегестрированы?</h5>
                 <Link to='/signup'>
                     <a>Зарегестрироваться</a>
