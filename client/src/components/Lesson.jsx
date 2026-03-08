@@ -6,9 +6,14 @@ import s from './lesson.module.css'
 import Card from "./Card"
 import CardsMode from "./CardsMode"
 import MemorizingMode from "./MemorizingMode"
+import EdittingMode from "./EdittingMode"
 
 
 const Lesson = () => {
+
+    const [edittingMode, setEdittingMode] = useState(false)
+
+    const myId = useSelector(s => s.auth.myId)
 
     const [burgerIsOpen, setBurgerIsOpen] = useState(false)
     
@@ -132,6 +137,7 @@ useEffect(() => {
     }
 
     const content = () => {
+
         if (studying.mode === 'cards') {
             return (
                 <CardsMode
@@ -173,7 +179,11 @@ useEffect(() => {
 
     return (
             <>
-        {studying.bool ? content() :
+        {edittingMode && <EdittingMode lesson={lesson}/>}
+        {
+        studying.bool ? content() :
+
+        !edittingMode &&
             <div className={s.cont}>
             <span>
             <h1>
@@ -188,7 +198,16 @@ useEffect(() => {
             <div className={s.succesHandlerCont}>
             {shareSuccess ? <div className={s.successText}>Ссылка на урок скопирована в буфер обмена</div> : null}
             </div>
-            <div className={s.buttonsCont}>
+            {   
+                !edittingMode &&
+                <div className={s.buttonsCont}>
+                {
+                    myId === lesson?.userId ?
+                    <button
+                    onClick={() => setEdittingMode(true)}
+                    >Редактировать</button>
+                    : null
+                }
                 <div
                 className={s.wrapperForBtns}
                 onClick={(e) => e.stopPropagation()}
@@ -209,6 +228,7 @@ useEffect(() => {
             Поделиться
             </button>
             </div>
+}
             <div className={s.previewContainer}>
             {
                 lesson?.cards?.map((e, i) => <div key={i} className={s.spanWrapper}>

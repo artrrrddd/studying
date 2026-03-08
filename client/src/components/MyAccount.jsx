@@ -9,6 +9,8 @@ const MyAccount = () => {
     const dispatch = useDispatch();
     const lessons = useSelector((state) => state.lessons.myItems) || [];
 
+    const isLoading = useSelector(s => s.lessons.fetchMineIsLoading)
+
     useEffect(() => {
         dispatch(fetchMyLessonsThunk());
     }, [dispatch]);
@@ -16,14 +18,14 @@ const MyAccount = () => {
     return (
         <div className={s.wrapper}>
             <div><h2>Мои уроки</h2>
-                {lessons?.length > 0 ? lessons.map((e) =>
+                {isLoading ? 'Загрузка...' :
+                lessons?.length > 0 ? lessons.map((e) =>
                 <div className={s.cont}>
                     <Link to={`/lessons/${e.id}`}>
                 <div className={s.link} key={e.id}>{e.title}</div>
                     </Link>
                 </div>
-            )
-                : 'нет уроков'}
+            )  : <div>нет уроков</div>}
             </div>
         </div>
     )

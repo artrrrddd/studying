@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: 2vh;
+    width: 100%;
 }
 
 
@@ -230,4 +231,9 @@
 
 .startLessonBtn {
     width: 10vw;
+}
+
+.wrapperForBtns {
+    display: flex;
+    gap: 1vw;
 }

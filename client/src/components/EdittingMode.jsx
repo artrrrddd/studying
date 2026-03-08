@@ -5,64 +5,70 @@ import {Link} from 'react-router-dom'
 import Import from './Import'
 import { useState } from 'react'
 import Card from './Card'
-import { createLessonThunk } from '../redux/thunks/lessonThunks'
+import { updateLessonThunk } from '../redux/thunks/lessonThunks'
 import { useEffect } from 'react'
 
-const Create = () => {
-
-    const createSuccess = useSelector(s => s.lessons.createSuccess)
-
-    const [imported, setImported] = useState([])
+const EdittingMode = (props) => {
 
     useEffect(() => {
+        setUpdatedLesson(props.lesson?.cards)
+    },[])
+
+    const updateSuccess = useSelector(s => s.lessons.updateSuccess)
+    
+    const [imported, setImported] = useState([])
+
+    const [updatedLesson, setUpdatedLesson] = useState(null)
+    
+    useEffect(() => {
         if (imported.length > 0) {
-            setLesson(prevState => [...prevState, ...imported.map((e) => {
-        return {
+            setUpdatedLesson(prevState => [...prevState, ...imported.map((e) => {
+                return {
                     word: e.word,
                     translate: e.translate,
                 }
-        })])
-        setImported([])
+            })])
+            setImported([])
         }
-
-        if (createSuccess) {
+        
+        if (updateSuccess) {
             word.current.value = '';
             description.current.value = '';
             lessonName.current.value = '';
             select.current.value = null;
             translate.current.value = '';
         }
-
-    },[imported, createSuccess])
-
+        
+    },[imported, updateSuccess])
+    
     const addCard = (card) => {
-        setLesson(prev => [...prev, card])
+        setUpdatedLesson(prev => [...prev, card])
         word.current.value = '';
         translate.current.value = '';
     }
 
-        const deleteCard = (card) => {        
-        setLesson(prev => prev.filter(e => e !== card))
+    const deleteCard = (card) => {        
+        setUpdatedLesson(prev => prev.filter(e => e !== card))
     }
-
+    
     const approve = () => {
-
-        const cards = lesson.map(e => {
+        
+        const cards = updatedLesson.map(e => {
             return {...e, lang: select.current.value}  
         })
         
-        dispatch(createLessonThunk(
+        dispatch(updateLessonThunk      (
             {
+                id: props.lesson?.id,
                 title: lessonName.current.value || alert('Добавьте название урока'),
                 description: description.current.value || '',
                 cards: cards
             }
         ))
     }
-
+    
     const [importIsOpen, setImportIsOpen] = useState(false)
-
-    const [lesson, setLesson] = useState([])
+    
     const dispatch = useDispatch()
     const word = useRef(null)
     const translate = useRef(null)
@@ -70,9 +76,9 @@ const Create = () => {
     const lessonName = useRef(null)
     const description = useRef(null)
     
-
+        
     // imported ? setLesson([...lesson, ...imported.map((e) => {
-    //     return {
+        //     return {
     //                 word: e.word,
     //                 translate: e.translate,
     //                 lang: select.current.value
@@ -86,13 +92,13 @@ const Create = () => {
     }
 
 const editTranslate = (e) => {
-    setLesson(prev => prev.map((item, index) => 
+    setUpdatedLesson(prev => prev.map((item, index) => 
         index === e.id ? {...item, translate: e.translate} : item
     ))
 }
 
 const editWord = (e) => {
-    setLesson(prev => prev.map((item, index) => 
+    setUpdatedLesson(prev => prev.map((item, index) => 
         index === e.id ? {...item, word: e.word} : item
     ))
 }
@@ -104,9 +110,12 @@ const editWord = (e) => {
     <div className={s.textInputs}>
         <span>Название урока</span>
         <textarea
+        defaultValue={props.lesson.title}
         ref={lessonName} name="" id=""></textarea>
         <span>Описание</span>
-        <textarea ref={description} name="" id=""></textarea>
+        <textarea
+        defaultValue={props.lesson.description}
+        ref={description} name="" id=""></textarea>
         <span>Язык</span>
         <select ref={select} className={s.select} name="lang" id="lang">
             <option value="English">English</option>
@@ -125,52 +134,51 @@ const editWord = (e) => {
         </button>
         <div className={s.previewWrapper}>
 
-        {lesson.map((e, i) => <div key={i} className={s.spanWrapper}>
+        {updatedLesson?.map((e, i) => <div key={i} className={s.spanWrapper}>
                             <div>{i + 1}</div>
                         <div className={s.previewWrapper}>
                             <div className={s.coloredBG}>
-                                <textarea onChange={(event) => editTranslate({id: i, translate: event.target.value})}>
-                            {                        
-                                e.translate
-                            }
+                                <textarea
+                                defaultValue={e.translate}
+                                onChange={(event) => editTranslate({id: i, translate: event.target.value})}>
+                        
                                 </textarea>
                             </div>
                         <span>Термин</span>
                         </div>
                         <div className={s.previewWrapper}>
                             <div className={s.coloredBG}>
-                                <textarea onChange={(event) => editWord({id: i, word: event.target.value})}>
-                            {
-                                e.word
-                            }
+                                <textarea
+                                defaultValue={e.word}
+                                onChange={(event) => editWord({id: i, word: event.target.value})}>
                                 </textarea>
                             </div>
                         <span>Определение</span>
                         </div>
-                        <button
-                            onClick={() => deleteCard(e)}                                    
-                            className={s.deleteBtn}>
-                                Удалить
-                        </button>
+                                    <button
+                                    onClick={() => deleteCard(e)}                                    
+                                    className={s.deleteBtn}>
+                                        Удалить
+                                    </button>
                     </div>)}
 
         </div>
-        {createSuccess ?
+        {updateSuccess ?
         <div className={s.successModal}>
         <div
         onClick={() => resetFlag()}
         className={s.overlay}>
             <span className={s.successSpan}>
-                Урок создан Ура
+                Урок успешно отредактирован
             </span> 
         </div>
         </div>
             : null}
-        <button onClick={() => approve()}>Подтвердить и создать урок</button>
+        <button onClick={() => approve()}>Подтвердить изменения</button>
         {importIsOpen ? <Import setter={setImportIsOpen} import={setImported}/> : <></>}
     </div>
     </>
     )
 }
 
-export default Create
+export default EdittingMode

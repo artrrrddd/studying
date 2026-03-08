@@ -59,13 +59,15 @@
 }
 
 .coloredBG {
+    align-items: start;
     display: flex;
     height: 100%;
     background-color: #2B74B7;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 .coloredBG textarea {
+    border-radius: 8px;
     padding: 1vw;
     width: 100%;
     resize: none;
@@ -88,6 +90,7 @@
     font-size: large;
     display: flex;
     justify-content: start;
+    align-items: start;
     gap: 1vw;
     width: 100%;
     min-height: 15vh;
@@ -95,4 +98,14 @@
     border-radius: 5px;
     padding: 0.5vw;
     box-sizing: border-box;
+}
+
+.deleteBtn {
+    margin-left: -0.5vw;
+    height: auto;
+    font-size: medium;
+}
+
+.deleteBtn:hover {
+    color: crimson;
 }
