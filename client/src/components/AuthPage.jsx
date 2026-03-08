@@ -8,6 +8,8 @@ import s from './auth.module.css'
 const AuthPage = () => {
     const [email, setEmail] = useState("")
     const [pwd, setPwd] = useState("")
+
+    const {error} = useSelector(s => s.auth)
     
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -28,6 +30,7 @@ const AuthPage = () => {
     return (
         <div className={s.page}>
             <div className={s.cont}>
+                {error && <div style={{color: 'red'}}>{error}</div>}
                 <div className={s.textareas}>
                     <input 
                         className={s.textarea} 

@@ -48,7 +48,7 @@ async login(email, password) {
     }
     const isPassEquals = await bcrypt.compare(password, user.password)
 if (!isPassEquals) {
-    throw ApiError.BadRequest('Неверный пароль');
+    throw ApiError.BadRequest('Неверный логин или пароль');
 }
 const userDto = new UserDto(user);
 const tokens = tokenService.generateToken({...userDto});

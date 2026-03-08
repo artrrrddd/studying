@@ -26,5 +26,3 @@ console.log('userData from token:', userData)
         return next(ApiError.UnauthorizedError());
     }
 };
-
-

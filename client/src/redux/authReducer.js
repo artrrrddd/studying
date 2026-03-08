@@ -2,26 +2,37 @@ const initialState = {
     isLogged: false,
     isLoading: false,
     shouldRedirect: false,
-    myId: ''
+    myId: '',
+    error: null,
+    success: null,
 };
 
 const authReducer = (state = initialState, action) => {
     switch(action.type) {
 
-         case 'auth/login/pending':
-            return {...state, isLoading: true};
+        case 'auth/login/pending':
+            return {...state, isLoading: true, error: null, success: null};
 
         case 'auth/login/fulfilled':
-            return {...state, isLoading: false, isLogged: true, shouldRedirect: true, myId: action.payload.user.id}
+            return {...state, isLoading: false, isLogged: true, shouldRedirect: true, myId: action.payload.user.id, success: 'Вы вошли'}
+
+        case 'auth/login/rejected':
+            return {...state, isLoading: false, isLogged: false, error: action.payload}
+
+        case 'auth/registration/pending':
+            return {...state, isLoading: true, error: null, success: null}
+
+        case 'auth/registration/fulfilled':
+            return {...state, isLoading: false, isLogged: true, shouldRedirect: true, myId: action.payload.user.id, success: 'Регистрация успешна'}
+
+        case 'auth/registration/rejected':
+            return {...state, isLoading: false, error: action.payload}
 
         case 'CLEAR_REDIRECT_FLAG':
             return {...state, shouldRedirect: false}
 
-        case 'auth/login/rejected':
-            return {...state, isLoading: false, isLogged: false}
-
         case 'auth/logout/fulfilled':
-            return {...state, isLogged: false, isLoading: false}
+            return {...state, isLogged: false, isLoading: false, success: null, error: null}
 
         case 'auth/logout/pending':
             return {...state, isLoading: true}

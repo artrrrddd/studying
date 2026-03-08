@@ -144,25 +144,25 @@ const Import = (props) => {
                 preview.map((e, i) => <div key={i} className={s.spanWrapper}>
                     <div>{i + 1}</div>
                 <div className={s.previewWrapper}>
-                <div className={s.coloredBG}>
-                <span>
+                    <div className={s.coloredBG}>
+                        <span>
                     {                        
                         e.indexOf(betweenWords) !== -1 ?
                         e.slice(0, e.indexOf(betweenWords)) : e
                     }
-                </span>
-                </div>
+                        </span>
+                    </div>
                 <span>Термин</span>
                 </div>
                 <div className={s.previewWrapper}>
-                <div className={s.coloredBG}>
-                <span>
+                    <div className={s.coloredBG}>
+                        <span>
                     {
                         e.indexOf(betweenWords) === -1 ?
                         '' : e.slice(e.indexOf(betweenWords) + 1)
                     }
-                </span>
-                </div>
+                        </span>
+                    </div>
                 <span>Определение</span>
                 </div>
             </div>)

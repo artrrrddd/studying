@@ -1,17 +1,20 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import AuthService from '../services/AuthService'
+import { useDispatch, useSelector } from 'react-redux'
+import { registrationThunk } from '../redux/thunks/authThunks'
+import {  Link } from 'react-router-dom'
 import s from './auth.module.css'
 
 const SignUp = () => {
     const [email, setEmail] = useState("")
     const [pwd, setPwd] = useState("")
-    const navigate = useNavigate()
+
+    const dispatch = useDispatch()
+
+    const { error } = useSelector(s => s.auth)
 
     const registrationFunc = async () => {
         try {
-            await AuthService.registration(email, pwd);
-            navigate('/auth');
+            dispatch(registrationThunk({email, pwd}))
         } catch(e) {
             alert(e.response?.data?.message || 'Ошибка регистрации');
         }
@@ -20,6 +23,7 @@ const SignUp = () => {
     return (
         <div className={s.page}>
             <div className={s.cont}>
+                {error && <div style={{color: 'red'}}>{error}</div>}
                 <div className={s.textareas}>
                     <input 
                         className={s.textarea} 

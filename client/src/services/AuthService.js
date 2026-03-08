@@ -9,7 +9,6 @@ export default class AuthService {
     static registration(email, password) {
         return $api.post('/registration', {email, password})
         .then(response => response.data)
-        
     }
 
     static logout() {
@@ -23,5 +22,3 @@ export default class AuthService {
     }
 
 }
-
-

@@ -36,7 +36,7 @@ const Create = () => {
     },[imported, createSuccess])
 
     const addCard = (card) => {
-        // dispatch(createCardThunk({word: word.current.value, translate: translate.current.value, lang: select.current.value}))
+
         setLesson(prev => [...prev, card])
         word.current.value = '';
         translate.current.value = '';
@@ -82,6 +82,18 @@ const Create = () => {
     const resetFlag = () => {
         dispatch({type: 'lessons/resetFlags'})
     }
+
+const editTranslate = (e) => {
+    setLesson(prev => prev.map((item, index) => 
+        index === e.id ? {...item, translate: e.translate} : item
+    ))
+}
+
+const editWord = (e) => {
+    setLesson(prev => prev.map((item, index) => 
+        index === e.id ? {...item, word: e.word} : item
+    ))
+}
     
     return (
     <>
@@ -110,9 +122,29 @@ const Create = () => {
         </button>
         <div className={s.previewWrapper}>
 
-        {lesson.map((e) => {
-            return <Card word={e.word} translate={e.translate}/>
-        })}
+        {lesson.map((e, i) => <div key={i} className={s.spanWrapper}>
+                            <div>{i + 1}</div>
+                        <div className={s.previewWrapper}>
+                            <div className={s.coloredBG}>
+                                <textarea onChange={(event) => editTranslate({id: i, translate: event.target.value})}>
+                            {                        
+                                e.translate
+                            }
+                                </textarea>
+                            </div>
+                        <span>Термин</span>
+                        </div>
+                        <div className={s.previewWrapper}>
+                            <div className={s.coloredBG}>
+                                <textarea onChannge={(event) => editWord({id: i, word: event.target.value})}>
+                            {
+                                e.word
+                            }
+                                </textarea>
+                            </div>
+                        <span>Определение</span>
+                        </div>
+                    </div>)}
 
         </div>
         {createSuccess ?

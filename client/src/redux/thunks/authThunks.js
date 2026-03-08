@@ -4,18 +4,19 @@ import AuthService from "../../services/AuthService"
 
 export const loginThunk = createAsyncThunk(
     'auth/login',
-    async ({email, pwd}) => {
-
+    async ({email, pwd}, { rejectWithValue }) => {
         if (!email || !pwd) {
-            alert('Введите логин и пароль')
-            return
-        };
-            const response = await AuthService.login(email, pwd);
-            localStorage.setItem('token', response.accessToken);
-            
-            return response;
+            return rejectWithValue('Введите логин и пароль')
+        }
+        try {
+            const response = await AuthService.login(email, pwd)
+            localStorage.setItem('token', response.accessToken)
+            return response
+        } catch (e) {
+            return rejectWithValue(e.response?.data?.message || 'Ошибка входа')
+        }
     }
-);
+)
 
 export const logoutThunk = createAsyncThunk(
     'auth/logout',
@@ -37,4 +38,16 @@ export const checkThunk = createAsyncThunk (
     }
 )
 
-
+export const registrationThunk = createAsyncThunk(
+    'auth/registration',
+    async ({email, pwd}, { rejectWithValue }) => {
+        try {
+            await AuthService.registration(email, pwd)
+            const response = await AuthService.login(email, pwd)
+            localStorage.setItem('token', response.accessToken)
+            return response
+        } catch (e) {
+            return rejectWithValue(e.response?.data?.message || 'Ошибка регистрации')
+        }
+    }
+)

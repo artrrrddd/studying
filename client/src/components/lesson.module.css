@@ -36,7 +36,7 @@
     display: flex;
     padding: 1vw;
     height: 100%;
-    background-color: #2B74B7;
+    background-color: royalblue;
     border-radius: 5px;
 }
 
@@ -49,6 +49,7 @@
 }
 
 .buttonsCont {
+    position: relative;
     gap: 1vw;
     display: flex;
     width: 100%;
@@ -101,11 +102,132 @@
 .answersCont {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 1vw;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .endBtnCont {
     display: flex;
     justify-content: center;
     gap: 1vw;
+}
+
+.btnsWrapper {
+    display: flex;
+}
+
+.back {
+    margin-left: auto;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    width: 70vw;
+    height: 60vh;
+    border-radius: 1vw;
+    padding: 1vw;
+    box-sizing: border-box;
+}
+
+.topSection {
+    display: flex;
+    align-items: center;
+    background-color: royalblue;
+    width: 100%;
+    height: 50%;
+    border-radius: inherit;
+    padding: 1.5vw;
+    font-size: x-large;
+    box-sizing: border-box;
+}
+
+.botSection {
+    display: flex;
+    align-items: center;
+    background-color:royalblue;
+    width: 100%;
+    height: 50%;
+    border-radius: inherit;
+}
+
+.botSection button {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.leftBtns {
+    padding: 1vw;
+    gap: 1.5vw;
+    display: flex;
+    width: 50%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.rightBtns {
+    gap: 1.5vw;
+    padding: 1vw;
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    flex-direction: column;
+}
+
+.leftBtns button, .rightBtns button {
+    height: 30%
+}
+
+.backBtns {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5vw;
+}
+
+.burgerWrap {
+    width: 10vw;
+    box-sizing: border-box;
+    padding: 0.6vw;
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    background-color: black;
+    border-radius: 8px;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    animation: popUp 0.2s ease-out;
+    right: 0;
+}
+
+.burgerWrap button {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+}
+
+@keyframes popUp {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.startLessonBtn {
+    width: 10vw;
 }

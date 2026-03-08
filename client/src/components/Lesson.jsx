@@ -1,20 +1,33 @@
 import { useDispatch, useSelector } from "react-redux"
 import { fetchLessonByIdThunk } from "../redux/thunks/lessonThunks"
 import { Link, useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import s from './lesson.module.css'
 import Card from "./Card"
+import CardsMode from "./CardsMode"
+import MemorizingMode from "./MemorizingMode"
+
 
 const Lesson = () => {
+
+    const [burgerIsOpen, setBurgerIsOpen] = useState(false)
+    
+    useEffect(() => {
+    if (!burgerIsOpen) return
+    
+    const handleClick = () => setBurgerIsOpen(false)
+    document.addEventListener('click', handleClick)
+    
+    return () => document.removeEventListener('click', handleClick)
+}, [burgerIsOpen])
 
     const lesson = useSelector(s => s.lessons.currentLesson)
 
     const [remaining, setRemaining] = useState(lesson?.cards)
-    
-    const { id } = useParams()
 
-    console.log(id);
+    const [history, setHistory] = useState([])
     
+    const { id } = useParams()    
     
     const dispatch = useDispatch()
     
@@ -40,59 +53,127 @@ const Lesson = () => {
                 setTimeout(() => {setShareSuccess(false)}, 2000)
             })
         }
-
-        console.log(lesson);
                 
-        const [errors, setErrors] = useState([])
+    const [errors, setErrors] = useState([])
     
     const swipe = (answer, currentCard) => {
+
+        setHistory(prev => [...prev, currentCard])
+
         if (answer === false) {
             setErrors(prev => prev.find(e => e?.id === currentCard?.id) ? prev : [...prev, currentCard])
         } else {
-            setErrors(prev => prev.find(e => e?.id === currentCard?.id) ? prev.filter((e) => e.id === currentCard.id) : prev)
+            setErrors(prev => prev.find(e => e?.id === currentCard?.id) ? prev.filter((e) => e.id !== currentCard.id) : prev)
         }
         setRemaining(prev => prev.slice(1))
     }
-    console.log(errors);
     
+    const goBack = () => {
+        
+        if(history.length === 0) return
+
+        const lastCard = history[history.length - 1]
+
+        isGoingBack.current = true
+        setCorrect({})
+        setRandomAnswers(lastCard.answers)
+        setRemaining(prev => [lastCard.card, ...prev]);
+        setHistory(prev => prev.slice(0, -1))
+        setErrors(prev => prev.filter(e => e === lastCard))
+    }
+
+    const again = () => {
+        setRemaining(lesson?.cards)
+        setHistory([])
+        setErrors([])
+    }
+
+    const answers = lesson?.cards?.map(e => e.word)
+
+    const [randomAnswers, setRandomAnswers] = useState([])
+
+    const isGoingBack = useRef(false)
+
+useEffect(() => {
+    if (!answers?.length || !remaining?.length) return
+    if (isGoingBack.current) {
+        isGoingBack.current = false
+        return
+    }
+
+    const correctIndex = answers.indexOf(remaining?.[0]?.word)
+    const otherIndexes = [...Array(answers.length).keys()]
+        .filter(i => i !== correctIndex)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3)
+
+    const indexes = [...otherIndexes, correctIndex].sort(() => Math.random() - 0.5)
+    setRandomAnswers(indexes.map(i => answers[i]))
+}, [remaining])
+
+    const [correct, setCorrect] = useState({})
+
+    const pickChoice = (choice, card) => {
+    if (correct.choice) return
+    
+    setCorrect({ correct: card.word, choice: choice })
+    if (choice !== card.word) {
+        setErrors(prev => prev.find(e => e.id === card.id) ? prev : [...prev, card])
+    } else {
+        setErrors(prev => prev.find(e => e.id === card.id) ? prev.filter((e) => e.id !== card.id) : prev)
+    }
+}
+    const getBtnColor = (word) => {
+
+        if (!correct.correct) return
+        if(word === correct.correct) return 'rgba(0, 255, 0, 0.4)'
+        if(word === correct.choice) return 'rgba(255, 0, 0, 0.4)'
+        return ''
+    }
+
+    const content = () => {
+        if (studying.mode === 'cards') {
+            return (
+                <CardsMode
+                remaining={remaining}
+                setRemaining={setRemaining}
+                again={again}
+                goBack={goBack}
+                swipe={swipe}
+                errors={errors}
+                />
+            )
+        }
+
+        if (studying.mode === 'memorizing') {
+            return (
+                <MemorizingMode 
+                    remaining={remaining}
+                    setRemaining={setRemaining}
+                    again={again}
+                    goBack={goBack}
+                    errors={errors}
+                    getBtnColor={getBtnColor}
+                    pickChoice={pickChoice}
+                    randomAnswers={randomAnswers}
+                    setCorrect={setCorrect}
+                    correct={correct}
+                    setHistory={setHistory}
+                    />
+            )
+        }
+
+        if (studying.mode === 'comparison') {
+            return (
+                <>
+                </>
+            )
+        }
+    }
 
     return (
-    <>
-            {studying ?  <>
-                <div className={s.cont}>
-                    {remaining?.length > 0 && (
-                        <div>
-                        <span>Карточек осталось: {remaining?.length}</span>
-                            <Card
-                                word={remaining?.[0]?.word}
-                                translate={remaining?.[0]?.translate}
-                            />
-                        </div>
-                    )}
-                    {remaining?.length > 0 ? 
-                    <div className={s.answersCont}>
-                        <button onClick={() => swipe(false, remaining?.[0])}>
-                            не знаю
-                        </button>
-                        <button onClick={() => swipe(true, remaining?.[0])}>
-                            знаю
-                        </button>
-                    </div>
-                    : <>Урок окончен
-                    <div>
-                        {errors.length > 0 ? `Ошибок: ${errors.length}` : 'Нет ошибок ура'}
-                    </div>
-                    <div className={s.endBtnCont}>
-                        <button onClick={() => setRemaining(lesson?.cards)}>Начать сначала</button>
-                        {
-                            errors.length > 0 ?
-                                <button onClick={() => setRemaining(errors)}>Тренировать ошибки</button>
-                            : null
-                        }
-                    </div>
-                    </>}
-                </div>
-            </> : 
+            <>
+        {studying.bool ? content() :
             <div className={s.cont}>
             <span>
             <h1>
@@ -108,9 +189,22 @@ const Lesson = () => {
             {shareSuccess ? <div className={s.successText}>Ссылка на урок скопирована в буфер обмена</div> : null}
             </div>
             <div className={s.buttonsCont}>
-            <button onClick={() => setStudying(true)}>
-            Начать урок
-            </button>
+                <div
+                className={s.wrapperForBtns}
+                onClick={(e) => e.stopPropagation()}
+                style={{ position: 'relative' }}>
+    {burgerIsOpen ? (
+        <div className={s.burgerWrap}>
+            <button onClick={() => { setStudying({bool: true, mode: 'cards'}); setBurgerIsOpen(false) }}>Карточки</button>
+            <button onClick={() => { setStudying({bool: true, mode: 'memorizing'}); setBurgerIsOpen(false) }}>Заучивание</button>
+            <button onClick={() => { setStudying({bool: true, mode: 'comparison'}); setBurgerIsOpen(false) }}>Сопоставление</button>
+        </div>
+    ) : (
+        <button
+        className={s.startLessonBtn}
+        onClick={() => setBurgerIsOpen(true)}>Начать урок</button>
+    )}
+</div>
             <button onClick={share}>
             Поделиться
             </button>
