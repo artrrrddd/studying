@@ -49,7 +49,7 @@ router.post(
   LessonController.create
 );
 
-router.get('/lessons', authMiddleware, LessonController.getAll);
+router.get('/lessons', LessonController.getAll);
 router.get('/myLessons', authMiddleware, LessonController.getMine);
 router.get('/lessons/:id', authMiddleware, LessonController.getById);
 
