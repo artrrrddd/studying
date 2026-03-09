@@ -7,6 +7,7 @@ import Card from "./Card"
 import CardsMode from "./CardsMode"
 import MemorizingMode from "./MemorizingMode"
 import EdittingMode from "./EdittingMode"
+import TestMode from "./TestMode"
 
 
 const Lesson = () => {
@@ -166,6 +167,26 @@ useEffect(() => {
                 </>
             )
         }
+
+        if (studying.mode === 'test') {
+            return (
+                <>
+                    <TestMode 
+                    remaining={remaining}
+                    setRemaining={setRemaining}
+                    again={again}
+                    goBack={goBack}
+                    errors={errors}
+                    setErrors={setErrors}
+                    pickChoice={pickChoice}
+                    randomAnswers={randomAnswers}
+                    setCorrect={setCorrect}
+                    correct={correct}
+                    setHistory={setHistory}
+                    />
+                </>
+            )
+        }
     }
 
     return (
@@ -208,6 +229,7 @@ useEffect(() => {
             <button onClick={() => { setStudying({bool: true, mode: 'cards'}); setBurgerIsOpen(false) }}>Карточки</button>
             <button onClick={() => { setStudying({bool: true, mode: 'memorizing'}); setBurgerIsOpen(false) }}>Заучивание</button>
             <button onClick={() => { setStudying({bool: true, mode: 'comparison'}); setBurgerIsOpen(false) }}>Сопоставление</button>
+            <button onClick={() => { setStudying({bool: true, mode: 'test'}); setBurgerIsOpen(false) }}>Тест</button>
         </div>
     ) : (
         <button
