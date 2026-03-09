@@ -51,7 +51,7 @@ class LessonService {
     return new LessonDto(lesson);
   }
 
-  async getAll(userId) {
+  async getAll() {
     const lessons = await LessonModel.find()
       .populate('cards')
       .sort({ createdAt: -1 });

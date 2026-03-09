@@ -24,7 +24,7 @@ class LessonController {
   async getAll(req, res, next) {
     try {
       const userId = req.user.id;
-      const lessons = await lessonService.getAll(userId);
+      const lessons = await lessonService.getAll();
       return res.json(lessons);
     } catch (e) {
       next(e);
