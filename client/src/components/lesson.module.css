@@ -190,6 +190,7 @@
 }
 
 .backBtns {
+    width: 95%;
     display: flex;
     justify-content: space-between;
     padding: 1.5vw;
@@ -236,4 +237,32 @@
 .wrapperForBtns {
     display: flex;
     gap: 1vw;
+}
+
+.textarea {
+    background-color: #242424;
+    width: 100%;
+    border-radius: 1vw;
+    padding: 1vw;
+    border: none;
+    font-size: xx-large;
+    resize: none;
+    height: 30%;
+}
+
+.textarea:focus {
+    outline: none;
+}
+
+.wrapperForTextarea {
+    gap: 1vw;
+    padding: 1vw;
+    box-sizing: border-box;
+    border-radius: 1vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: royalblue;
 }

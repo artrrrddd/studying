@@ -42,7 +42,12 @@ const Lesson = () => {
 
     useEffect(() => {
         if (lesson?.cards) {
-            setRemaining(lesson.cards)
+            setRemaining(lesson.cards.map((e) =>  (
+                {
+                    ...e,
+                    attempt: 0
+                }
+            )))
         }
     },[lesson])
     
@@ -120,21 +125,8 @@ useEffect(() => {
 
     const pickChoice = (choice, card) => {
     if (correct.choice) return
-    
     setCorrect({ correct: card.word, choice: choice })
-    if (choice !== card.word) {
-        setErrors(prev => prev.find(e => e.id === card.id) ? prev : [...prev, card])
-    } else {
-        setErrors(prev => prev.find(e => e.id === card.id) ? prev.filter((e) => e.id !== card.id) : prev)
-    }
 }
-    const getBtnColor = (word) => {
-
-        if (!correct.correct) return
-        if(word === correct.correct) return '2px dashed green'
-        if(word === correct.choice) return '2px dashed red'
-        return ''
-    }
 
     const content = () => {
 
@@ -159,7 +151,6 @@ useEffect(() => {
                     again={again}
                     goBack={goBack}
                     errors={errors}
-                    getBtnColor={getBtnColor}
                     pickChoice={pickChoice}
                     randomAnswers={randomAnswers}
                     setCorrect={setCorrect}

@@ -18,6 +18,10 @@
     height: 5vh;
 }
 
+.textarea:focus {
+    outline: none;
+}
+
 .textarea:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px #1a1a1a inset;
     -webkit-text-fill-color: white;
