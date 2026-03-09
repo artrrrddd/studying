@@ -51,7 +51,7 @@ router.post(
 
 router.get('/lessons', LessonController.getAll);
 router.get('/myLessons', authMiddleware, LessonController.getMine);
-router.get('/lessons/:id', authMiddleware, LessonController.getById);
+router.get('/lessons/:id', LessonController.getById);
 
 router.patch(
   '/lessons/:id',

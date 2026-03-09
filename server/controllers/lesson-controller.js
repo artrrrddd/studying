@@ -41,7 +41,6 @@ class LessonController {
   }
 
   async getById(req, res, next) {
-
     
     try {
       const { id } = req.params;
