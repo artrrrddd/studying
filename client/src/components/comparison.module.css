@@ -1,0 +1,64 @@
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 70vw;
+    height: 75vh;
+}
+
+.row {
+    position: relative;
+    margin: 1vw;
+    gap: 3vh;
+    width: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.item {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    background-color: black;
+    width: 25vw;
+    height: 12.8vh;
+    padding: 1vw;
+    box-sizing: border-box;
+}
+
+.leftItem {
+    user-select: none;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    background-color: black;
+    width: 15vw;
+    height: 5vh;
+    padding: 1vw;
+    box-sizing: border-box;
+}
+
+.snapArea {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    box-sizing: border-box;
+    height: 5vh;
+    width: 15vw;
+    transition: all 0.2s ease;
+}
+
+.snapActive {
+    box-shadow: 0 0 15px 4px rgba(0,255,150,0.7);
+    transform: scale(1.05);
+    background-color: #00ff95;
+}
+
+.answerCont {
+    gap: 1vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

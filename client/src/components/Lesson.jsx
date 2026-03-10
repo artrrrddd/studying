@@ -7,7 +7,7 @@ import Card from "./Card"
 import CardsMode from "./CardsMode"
 import MemorizingMode from "./MemorizingMode"
 import EdittingMode from "./EdittingMode"
-import TestMode from "./TestMode"
+import ComparisonMode from "./ComparisonMode"
 
 
 const Lesson = () => {
@@ -103,9 +103,13 @@ const Lesson = () => {
 
     const [randomAnswers, setRandomAnswers] = useState([])
 
+    const [randomQuestions, setRandomQuestions] = useState([]) // для ComparisonMode
+
+    const questions = lesson?.cards?.map(e => e.translate)
+
     const isGoingBack = useRef(false)
 
-useEffect(() => {
+    useEffect(() => {
     if (!answers?.length || !remaining?.length) return
     if (isGoingBack.current) {
         isGoingBack.current = false
@@ -120,6 +124,19 @@ useEffect(() => {
 
     const indexes = [...otherIndexes, correctIndex].sort(() => Math.random() - 0.5)
     setRandomAnswers(indexes.map(i => answers[i]))
+
+    const questionIndex = questions.indexOf(remaining?.[0]?.translate)
+    const otherQuestions = [...Array(questions.length).keys()]
+        .filter(i => i !== questionIndex)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3)
+
+    const indexesForQuestions = [...otherQuestions, questionIndex].sort(() => Math.random() - 0.5)
+    setRandomQuestions(indexesForQuestions.map(i => questions[i]))
+
+    console.log(questions);
+    
+
 }, [remaining])
 
     const [correct, setCorrect] = useState({})
@@ -164,6 +181,20 @@ useEffect(() => {
         if (studying.mode === 'comparison') {
             return (
                 <>
+                <ComparisonMode 
+                    remaining={remaining}
+                    setRemaining={setRemaining}
+                    again={again}
+                    goBack={goBack}
+                    errors={errors}
+                    setErrors={setErrors}
+                    pickChoice={pickChoice}
+                    randomAnswers={randomAnswers}
+                    randomQuestions={randomQuestions}
+                    setCorrect={setCorrect}
+                    correct={correct}
+                    setHistory={setHistory}
+                    />
                 </>
             )
         }
