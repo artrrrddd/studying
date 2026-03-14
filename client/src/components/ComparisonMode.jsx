@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import s from './comparison.module.css'
 import {
   DndContext,
   DragOverlay,
@@ -148,6 +149,9 @@ export default function ComparisonMode({
               })}
             </div>
           </div>
+          <div className={s.asd}>
+            asdas
+          </div>
 
           <DragOverlay dropAnimation={{ duration: 160, easing: "ease" }}>
             {activeQIdx !== null && (
@@ -283,8 +287,6 @@ function Styles() {
           inset 0 -1px 0 rgba(255,255,255,0.08),
           inset 1px 0 0 rgba(255,255,255,0.10),
           inset -1px 0 0 rgba(255,255,255,0.06),
-          0 8px 24px rgba(0,0,0,0.18),
-          0 2px 8px rgba(0,0,0,0.14),
           0 12px 40px rgba(35,206,217,0.08);
         transition: box-shadow 0.15s, opacity 0.12s, transform 0.15s;
       }
@@ -317,24 +319,6 @@ function Styles() {
         pointer-events: none;
       }
 
-      .chip::after {
-        content: '';
-        position: absolute;
-        top: 2px;
-        left: 15%;
-        right: 15%;
-        height: 35%;
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 13;
-        background: radial-gradient(
-          ellipse at center,
-          rgba(255,255,255,0.30) 0%,
-          rgba(255,255,255,0.08) 45%,
-          rgba(255,255,255,0.0) 100%
-        );
-      }
-
       .chip:hover {
         transform: translateY(-2px) scale(1.01);
         box-shadow:
@@ -343,8 +327,6 @@ function Styles() {
           inset 0 -1px 0 rgba(255,255,255,0.10),
           inset 1px 0 0 rgba(255,255,255,0.14),
           inset -1px 0 0 rgba(255,255,255,0.08),
-          0 14px 32px rgba(0,0,0,0.22),
-          0 4px 12px rgba(0,0,0,0.18),
           0 16px 48px rgba(35,206,217,0.12);
       }
 

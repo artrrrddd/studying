@@ -72,6 +72,36 @@ float getMinSize() {
   return min(uChipSize.x, uChipSize.y);
 }
 
+vec2 getAspectCorrectedUV(vec2 uv, out bool isOutOfBounds) {
+  float textureAspect = uTextureResolution.x / max(uTextureResolution.y, 1.0);
+  float screenAspect = uResolution.x / max(uResolution.y, 1.0);
+  vec2 scale = vec2(1.0);
+
+  if (textureAspect > screenAspect) {
+    scale.y = textureAspect / screenAspect;
+  } else {
+    scale.x = screenAspect / textureAspect;
+  }
+
+  vec2 correctedUV = (uv - 0.5) * scale + 0.5;
+  isOutOfBounds =
+    correctedUV.x < 0.0 || correctedUV.x > 1.0 ||
+    correctedUV.y < 0.0 || correctedUV.y > 1.0;
+
+  return correctedUV;
+}
+
+vec4 sampleBackground(vec2 uv) {
+  bool isOutOfBounds;
+  vec2 correctedUV = getAspectCorrectedUV(uv, isOutOfBounds);
+
+  if (isOutOfBounds) {
+    return vec4(0.8, 0.8, 0.8, 1.0);
+  }
+
+  return texture(uTexture, correctedUV);
+}
+
 float getChipDist(vec2 uv) {
   float aspect = uResolution.x / max(uResolution.y, 1.0);
   float padding = mix(0.004, 0.014, clamp(uRadius, 0.0, 1.0));
@@ -83,6 +113,18 @@ float getChipDist(vec2 uv) {
   float cornerRadius = min(halfSize.x, halfSize.y) * 0.28;
 
   return sdRoundedBox(local, halfSize, cornerRadius);
+}
+
+vec2 getChipLocal(vec2 uv) {
+  float aspect = uResolution.x / max(uResolution.y, 1.0);
+  float padding = mix(0.004, 0.014, clamp(uRadius, 0.0, 1.0));
+  vec2 local = uv - uChipPos;
+  local.x *= aspect;
+
+  vec2 halfSize = max(uChipSize * 0.5 - vec2(padding * 0.75, padding), vec2(0.001));
+  halfSize.x *= aspect;
+
+  return clamp(local / halfSize, vec2(-1.0), vec2(1.0));
 }
 
 float getDist(vec2 uv) {
@@ -114,6 +156,8 @@ float getHighlight(vec2 uv) {
   vec2 lightPos = mix(lightBase, uMousePos, 0.28);
   vec2 highlightPos = uv - lightPos + vec2(uHighlightOffsetX * uChipSize.x, uHighlightOffsetY * uChipSize.y);
   highlightPos.x *= aspect;
+  vec2 chipLocal = getChipLocal(uv);
+  float localLen = length(chipLocal);
 
   vec2 halfSize = vec2(uChipSize.x * 0.16, uChipSize.y * 0.11) * uHighlightSize;
   halfSize.x *= aspect;
@@ -122,24 +166,45 @@ float getHighlight(vec2 uv) {
   float highlightDist = sdRoundedBox(highlightPos, halfSize, cornerRadius);
   float highlight = 1.0 - smoothstep(-getMinSize() * 0.08, getMinSize() * 0.12, highlightDist);
   float centerFalloff = 1.0 - smoothstep(0.0, getMinSize() * 0.65, length(highlightPos));
+  float domeHighlight = pow(clamp(1.0 - localLen, 0.0, 1.0), 1.8);
+  domeHighlight *= smoothstep(-0.92, -0.08, chipLocal.y);
 
-  return highlight * centerFalloff * uHighlightIntensity;
+  return (highlight * centerFalloff + domeHighlight * 0.24) * uHighlightIntensity;
 }
 
 vec4 refrakt(float sd, vec2 st, vec4 bg, vec2 originalUV) {
   float safeSd = max(abs(sd), getMinSize() * 0.2);
-  vec2 dir = length(st) > 0.0001 ? normalize(st) : vec2(0.0);
-  vec2 offset = dir * (0.001 + smoothstep(getMinSize() * 0.12, -getMinSize() * 0.28, sd) * uDistort * 0.006) / safeSd;
+  vec2 chipLocal = getChipLocal(originalUV);
+  float localLen = length(chipLocal);
+  vec2 lensDir = localLen > 0.0001 ? normalize(chipLocal) : vec2(0.0);
+  vec2 spinDir = length(st) > 0.0001 ? normalize(st) : vec2(0.0);
+  vec2 dir = normalize(lensDir * 0.82 + spinDir * 0.18);
+  float interior = smoothstep(getMinSize() * 0.16, -getMinSize() * 0.34, sd);
+  float bulge = pow(clamp(1.0 - localLen, 0.0, 1.0), 0.55);
+  float rim = smoothstep(0.18, 1.0, localLen);
+  float lensStrength = mix(bulge * 0.55, 1.0 + rim * 0.85, rim);
+  vec2 offset =
+    dir *
+    (0.0008 + interior * lensStrength * uDistort * 0.0075) /
+    safeSd;
   float disp = uDispersion * 0.01;
 
-  vec2 redUV = clamp(originalUV + offset * disp * 1.2, vec2(0.0), vec2(1.0));
-  vec2 greenUV = clamp(originalUV + offset * disp, vec2(0.0), vec2(1.0));
-  vec2 blueUV = clamp(originalUV + offset * disp * 0.8, vec2(0.0), vec2(1.0));
+  vec2 redUV = originalUV + offset * disp * 1.2;
+  vec2 greenUV = originalUV + offset * disp;
+  vec2 blueUV = originalUV + offset * disp * 0.8;
+
+  bool isOutOfBoundsR;
+  bool isOutOfBoundsG;
+  bool isOutOfBoundsB;
+
+  vec2 correctedRedUV = getAspectCorrectedUV(redUV, isOutOfBoundsR);
+  vec2 correctedGreenUV = getAspectCorrectedUV(greenUV, isOutOfBoundsG);
+  vec2 correctedBlueUV = getAspectCorrectedUV(blueUV, isOutOfBoundsB);
 
   vec4 refractedColor = vec4(
-    texture(uTexture, redUV).r,
-    texture(uTexture, greenUV).g,
-    texture(uTexture, blueUV).b,
+    isOutOfBoundsR ? bg.r : texture(uTexture, correctedRedUV).r,
+    isOutOfBoundsG ? bg.g : texture(uTexture, correctedGreenUV).g,
+    isOutOfBoundsB ? bg.b : texture(uTexture, correctedBlueUV).b,
     1.0
   );
 
@@ -169,7 +234,7 @@ void main() {
     discard;
   }
 
-  vec4 bg = texture(uTexture, clamp(uv, vec2(0.0), vec2(1.0)));
+  vec4 bg = sampleBackground(uv);
   bg.rgb = mix(bg.rgb, vec3(0.0), getShadow(uv) * 0.12);
 
   float aspect = uResolution.x / max(uResolution.y, 1.0);
@@ -195,7 +260,7 @@ const glassParams = {
   distort: 2.1,
   dispersion: 0.75,
   rotSpeed: 1.0,
-  shadowIntensity: 0.08,
+  shadowIntensity: 0,
   shadowOffsetX: 0.14,
   shadowOffsetY: 0.12,
   shadowBlur: 0.32,
