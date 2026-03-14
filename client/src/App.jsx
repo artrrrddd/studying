@@ -2,7 +2,11 @@ import './App.css'
 import AppContent from './AppContent'
 
 function App() {
-  return <AppContent />
+  return (
+    <>
+  <AppContent />
+    </>
+  )
 }
 
 export default App

@@ -1,46 +1,22 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   DndContext,
   DragOverlay,
   PointerSensor,
   TouchSensor,
+  closestCenter,
+  useDroppable,
   useSensor,
   useSensors,
-  useDroppable,
-  useDraggable,
-  closestCenter,
 } from "@dnd-kit/core";
-
-/*
-  props:
-    randomQuestions: string[4]
-    randomAnswers:   string[4]
-    remaining:       any[]
-*/
+import Chip, { ChipPreview } from "./Chip";
+import GlassCanvas from "./GlassCanvas";
 
 const INDICES = [0, 1, 2, 3];
 
-// ── Draggable chip ────────────────────────────────────────────────────────────
-
-function Chip({ id, label, placed }) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id });
-  return (
-    <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      className={`chip${placed ? " placed" : ""}`}
-      data-dragging={isDragging}
-    >
-      {label}
-    </div>
-  );
-}
-
-// ── Droppable zone ────────────────────────────────────────────────────────────
-
 function DropZone({ id, children, occupied }) {
   const { setNodeRef, isOver } = useDroppable({ id });
+
   return (
     <div
       ref={setNodeRef}
@@ -51,8 +27,6 @@ function DropZone({ id, children, occupied }) {
   );
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
-
 export default function ComparisonMode({
   randomQuestions = [],
   randomAnswers = [],
@@ -60,26 +34,33 @@ export default function ComparisonMode({
 }) {
   const [placements, setPlacements] = useState(new Map());
   const [activeQIdx, setActiveQIdx] = useState(null);
+  const [activeRect, setActiveRect] = useState(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 8 } })
   );
 
-  // reverse: answerIdx → questionIdx
   const answerOccupant = useMemo(() => {
-    const m = new Map();
-    placements.forEach((ai, qi) => m.set(ai, qi));
-    return m;
+    const map = new Map();
+    placements.forEach((answerIdx, questionIdx) => {
+      map.set(answerIdx, questionIdx);
+    });
+    return map;
   }, [placements]);
 
   function onDragStart({ active }) {
     setActiveQIdx(Number(active.id));
+    setActiveRect(active.rect.current?.initial ?? active.rect.current?.translated ?? null);
   }
 
   function onDragEnd({ active, over }) {
     setActiveQIdx(null);
-    if (!over) return;
+    setActiveRect(null);
+
+    if (!over) {
+      return;
+    }
 
     const qIdx = Number(active.id);
     const aIdx = Number(over.id);
@@ -110,74 +91,82 @@ export default function ComparisonMode({
   }
 
   const progress = (placements.size / 4) * 100;
+  const snapshotKey = `${activeQIdx ?? "idle"}:${[...placements.entries()]
+    .map(([questionIdx, answerIdx]) => `${questionIdx}-${answerIdx}`)
+    .sort()
+    .join("|")}`;
 
   return (
     <>
       <Styles />
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
-      >
-        <div className="lf-root">
+      <GlassCanvas snapshotKey={snapshotKey}>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+        >
+          <div className="lf-root">
+            <div className="lf-header">
+              <span className="lf-title">Сопоставление</span>
+              <span className="lf-badge">{remaining.length} осталось</span>
+            </div>
 
-          <div className="lf-header">
-            <span className="lf-title">Сопоставление</span>
-            <span className="lf-badge">{remaining.length} осталось</span>
-          </div>
+            <div className="lf-progress-track">
+              <div className="lf-progress-fill" style={{ width: `${progress}%` }} />
+            </div>
 
-          <div className="lf-progress-track">
-            <div className="lf-progress-fill" style={{ width: `${progress}%` }} />
-          </div>
+            <div className="lf-board">
+              {INDICES.map((ai) => {
+                const placedQIdx = answerOccupant.get(ai);
+                const isQPlaced = placements.has(ai);
+                const showUnplaced = !isQPlaced && activeQIdx !== ai;
 
-          <div className="lf-board">
-            {INDICES.map((ai) => {
-              const placedQIdx   = answerOccupant.get(ai);
-              const isQPlaced    = placements.has(ai);
-              const showUnplaced = !isQPlaced && activeQIdx !== ai;
+                return (
+                  <div key={ai} className="lf-row">
+                    <div className="lf-cell-left">
+                      {showUnplaced ? (
+                        <Chip id={String(ai)} label={randomQuestions[ai]} placed={false} />
+                      ) : (
+                        <div className="lf-ghost" />
+                      )}
+                    </div>
 
-              return (
-                <div key={ai} className="lf-row">
+                    <DropZone id={String(ai)} occupied={placedQIdx !== undefined}>
+                      {placedQIdx !== undefined && activeQIdx !== placedQIdx && (
+                        <Chip
+                          id={String(placedQIdx)}
+                          label={randomQuestions[placedQIdx]}
+                          placed={true}
+                        />
+                      )}
+                    </DropZone>
 
-                  <div className="lf-cell-left">
-                    {showUnplaced ? (
-                      <Chip id={String(ai)} label={randomQuestions[ai]} placed={false} />
-                    ) : (
-                      <div className="lf-ghost" />
-                    )}
+                    <div className="lf-answer">{randomAnswers[ai]}</div>
                   </div>
-
-                  <DropZone id={String(ai)} occupied={placedQIdx !== undefined}>
-                    {placedQIdx !== undefined && activeQIdx !== placedQIdx && (
-                      <Chip
-                        id={String(placedQIdx)}
-                        label={randomQuestions[placedQIdx]}
-                        placed={true}
-                      />
-                    )}
-                  </DropZone>
-
-                  <div className="lf-answer">{randomAnswers[ai]}</div>
-
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
-        </div>
-
-        <DragOverlay dropAnimation={{ duration: 160, easing: "ease" }}>
-          {activeQIdx !== null && (
-            <div className="chip is-overlay">{randomQuestions[activeQIdx]}</div>
-          )}
-        </DragOverlay>
-      </DndContext>
+          <DragOverlay dropAnimation={{ duration: 160, easing: "ease" }}>
+            {activeQIdx !== null && (
+              <ChipPreview
+                label={randomQuestions[activeQIdx]}
+                className="is-overlay"
+                style={
+                  activeRect
+                    ? { width: `${activeRect.width}px`, height: `${activeRect.height}px` }
+                    : { width: "clamp(220px, 26vw, 360px)" }
+                }
+              />
+            )}
+          </DragOverlay>
+        </DndContext>
+      </GlassCanvas>
     </>
   );
 }
-
-// ── Styles ────────────────────────────────────────────────────────────────────
 
 function Styles() {
   return (
@@ -191,13 +180,13 @@ function Styles() {
         padding: 24px 16px 48px;
       }
 
-      /* ── Header ── */
       .lf-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 10px;
       }
+
       .lf-title {
         color: #fff;
         font-size: x-large;
@@ -205,6 +194,7 @@ function Styles() {
         letter-spacing: 0.01em;
         text-shadow: 0 1px 8px rgba(0,0,0,0.4);
       }
+
       .lf-badge {
         font-size: medium;
         font-weight: 700;
@@ -220,7 +210,6 @@ function Styles() {
         -webkit-backdrop-filter: blur(20px) saturate(180%);
       }
 
-      /* ── Progress ── */
       .lf-progress-track {
         height: 4px;
         background: rgba(255,255,255,0.08);
@@ -228,6 +217,7 @@ function Styles() {
         margin-bottom: 20px;
         overflow: hidden;
       }
+
       .lf-progress-fill {
         height: 100%;
         background: linear-gradient(90deg, #FCA47C, #F9D779);
@@ -236,8 +226,11 @@ function Styles() {
         transition: width 0.4s ease;
       }
 
-      /* ── Board ── */
-      .lf-board { display: flex; flex-direction: column; gap: 24px; }
+      .lf-board {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
 
       .lf-row {
         display: grid;
@@ -247,7 +240,10 @@ function Styles() {
         min-height: 88px;
       }
 
-      .lf-cell-left { display: flex; align-items: center; }
+      .lf-cell-left {
+        display: flex;
+        align-items: center;
+      }
 
       .lf-ghost {
         width: 100%;
@@ -257,7 +253,6 @@ function Styles() {
         background: rgba(255,255,255,0.02);
       }
 
-      /* ── Liquid drop chip ── */
       .chip {
         position: relative;
         width: 100%;
@@ -280,63 +275,77 @@ function Styles() {
         user-select: none;
         touch-action: none;
         isolation: isolate;
-
-        background: rgba(255,255,255,0.001);
-
-        backdrop-filter: blur(1px) saturate(180%);
-        -webkit-backdrop-filter: blur(12px) saturate(180%);
-
+        z-index: 12;
+        background: transparent;
         box-shadow:
-          0 0 0 0.5px rgba(255,255,255,0.20),
-          inset 0 2px 0 rgba(255,255,255,0.55),
-          inset 0 -2px 4px rgba(0,0,0,0.35),
-          inset 2px 0 0 rgba(255,255,255,0.15),
-          inset -2px 0 0 rgba(255,255,255,0.10),
-          0 8px 32px rgba(0,0,0,0.40),
-          0 2px 8px rgba(0,0,0,0.25),
-          0 12px 40px rgba(35,206,217,0.10);
+          0 0 0 0.5px rgba(255,255,255,0.22),
+          inset 0 1px 0 rgba(255,255,255,0.46),
+          inset 0 -1px 0 rgba(255,255,255,0.08),
+          inset 1px 0 0 rgba(255,255,255,0.10),
+          inset -1px 0 0 rgba(255,255,255,0.06),
+          0 8px 24px rgba(0,0,0,0.18),
+          0 2px 8px rgba(0,0,0,0.14),
+          0 12px 40px rgba(35,206,217,0.08);
+        transition: box-shadow 0.15s, opacity 0.12s, transform 0.15s;
+      }
 
-        transition: box-shadow 0.15s, background 0.15s, opacity 0.12s, transform 0.15s;
+      .chip__label {
+        position: relative;
+        z-index: 14;
+        display: block;
       }
 
       .chip::before {
         content: '';
         position: absolute;
-        top: 0; left: 10%; right: 10%;
+        top: 0;
+        left: 10%;
+        right: 10%;
         height: 1.5px;
         background: linear-gradient(90deg,
           transparent,
-          rgba(255,100,80,0.9)  10%,
-          rgba(255,200,60,1.0)  25%,
-          rgba(80,255,160,0.9)  45%,
-          rgba(60,160,255,0.9)  65%,
-          rgba(160,80,255,0.8)  80%,
+          rgba(255,100,80,0.9) 10%,
+          rgba(255,200,60,1.0) 25%,
+          rgba(80,255,160,0.9) 45%,
+          rgba(60,160,255,0.9) 65%,
+          rgba(160,80,255,0.8) 80%,
           transparent
         );
         border-radius: 99px;
         filter: blur(0.3px);
+        z-index: 13;
+        pointer-events: none;
       }
 
       .chip::after {
         content: '';
         position: absolute;
-        top: 2px; left: 15%; right: 15%;
+        top: 2px;
+        left: 15%;
+        right: 15%;
         height: 35%;
         border-radius: 50%;
         pointer-events: none;
+        z-index: 13;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(255,255,255,0.30) 0%,
+          rgba(255,255,255,0.08) 45%,
+          rgba(255,255,255,0.0) 100%
+        );
       }
 
       .chip:hover {
         transform: translateY(-2px) scale(1.01);
         box-shadow:
           0 0 0 0.5px rgba(255,255,255,0.28),
-          inset 0 2px 0 rgba(255,255,255,0.60),
-          inset 0 -2px 4px rgba(0,0,0,0.35),
-          inset 2px 0 0 rgba(255,255,255,0.18),
-          inset -2px 0 0 rgba(255,255,255,0.12),
-          0 14px 42px rgba(0,0,0,0.50),
-          0 4px 12px rgba(0,0,0,0.30),
-          0 16px 48px rgba(35,206,217,0.16);
+          inset 0 1px 0 rgba(255,255,255,0.56),
+          inset 0 -1px 0 rgba(255,255,255,0.10),
+          inset 1px 0 0 rgba(255,255,255,0.14),
+          inset -1px 0 0 rgba(255,255,255,0.08),
+          0 14px 32px rgba(0,0,0,0.22),
+          0 4px 12px rgba(0,0,0,0.18),
+          0 16px 48px rgba(35,206,217,0.12);
       }
 
       .chip[data-dragging="true"] {
@@ -344,8 +353,6 @@ function Styles() {
       }
 
       .chip.placed {
-        backdrop-filter: blur(1px) saturate(180%);
-        -webkit-backdrop-filter: blur(12px) saturate(200%);
         color: #FFE8D4;
       }
 
@@ -355,27 +362,25 @@ function Styles() {
         opacity: 1 !important;
       }
 
-      /* ── Drop zone ── */
       .dz {
         min-height: 88px;
         border-radius: 18px;
         padding: 4px;
         display: flex;
         align-items: center;
-
         background: rgba(255,255,255,0.04);
         backdrop-filter: blur(16px) saturate(140%);
         -webkit-backdrop-filter: blur(16px) saturate(140%);
-
         border: 1.5px dashed rgba(255,255,255,0.15);
         box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-
         transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
       }
+
       .dz.has {
         border: 0.5px solid rgba(252,164,124,0.30);
         box-shadow: inset 0 1px 0 rgba(255,200,150,0.10);
       }
+
       .dz.over {
         border-color: rgba(255,255,255,0.40);
         background: rgba(255,255,255,0.08);
@@ -383,9 +388,11 @@ function Styles() {
           inset 0 1px 0 rgba(255,255,255,0.12),
           0 0 0 3px rgba(255,255,255,0.06);
       }
-      .dz .chip { cursor: grab; }
 
-      /* ── Answer card ── */
+      .dz .chip {
+        cursor: grab;
+      }
+
       .lf-answer {
         padding: 26px 18px;
         border-radius: 18px;
@@ -397,18 +404,15 @@ function Styles() {
         white-space: normal;
         word-break: break-word;
         overflow-wrap: break-word;
-
         background: rgba(255,255,255,0.04);
         backdrop-filter: blur(16px) saturate(140%);
         -webkit-backdrop-filter: blur(16px) saturate(140%);
-
         box-shadow:
           0 0 0 0.5px rgba(255,255,255,0.08),
           inset 0 1px 0 rgba(255,255,255,0.06),
           inset 0 -1px 0 rgba(0,0,0,0.08);
       }
 
-      /* ── End screen ── */
       .lesson-end {
         display: flex;
         align-items: center;
