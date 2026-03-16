@@ -12,7 +12,6 @@ import Cards from './components/Cards'
 import Import from './components/Import'
 import Lessons from './components/Lessons'
 import Lesson from './components/Lesson'
-import LiquidGlass from './components/LiquidGlass'
 
 function AppContent() {
   const dispatch = useDispatch()

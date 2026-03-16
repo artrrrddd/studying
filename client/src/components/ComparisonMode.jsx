@@ -11,7 +11,18 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import Chip, { ChipPreview } from "./Chip";
-import GlassCanvas from "./GlassCanvas";
+import LiquidGlassPane from "./LiquidGlassPane";
+
+const heroGlassOptions = {
+  refraction: 0.028,
+  bevelDepth: 0.11,
+  bevelWidth: 0.17,
+  frost: 1.2,
+  shadow: false,
+  specular: false,
+  reveal: 'none',
+  magnify: 1.03,
+}
 
 const INDICES = [0, 1, 2, 3];
 
@@ -85,7 +96,7 @@ export default function ComparisonMode({
       <>
         <Styles />
         <div className="lf-root">
-          <div className="lesson-end">Урок окончен</div>
+          <div className="lesson-end">Урок оконче��</div>
         </div>
       </>
     );
@@ -100,13 +111,13 @@ export default function ComparisonMode({
   return (
     <>
       <Styles />
-      <GlassCanvas snapshotKey={snapshotKey}>
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragStart={onDragStart}
           onDragEnd={onDragEnd}
         >
+
           <div className="lf-root">
             <div className="lf-header">
               <span className="lf-title">Сопоставление</span>
@@ -127,7 +138,18 @@ export default function ComparisonMode({
                   <div key={ai} className="lf-row">
                     <div className="lf-cell-left">
                       {showUnplaced ? (
-                        <Chip id={String(ai)} label={randomQuestions[ai]} placed={false} />
+                        <div className={s.glassSlot}>
+
+          <LiquidGlassPane
+            paneId={`comparison-liquid-panel-${ai}`}
+            className={s.glassPane}
+            surfaceClassName={s.glassSurface}
+            contentClassName={s.glassContent}
+            options={heroGlassOptions}
+          >
+          </LiquidGlassPane>
+
+        </div>
                       ) : (
                         <div className="lf-ghost" />
                       )}
@@ -149,9 +171,6 @@ export default function ComparisonMode({
               })}
             </div>
           </div>
-          <div className={s.asd}>
-            asdas
-          </div>
 
           <DragOverlay dropAnimation={{ duration: 160, easing: "ease" }}>
             {activeQIdx !== null && (
@@ -167,7 +186,6 @@ export default function ComparisonMode({
             )}
           </DragOverlay>
         </DndContext>
-      </GlassCanvas>
     </>
   );
 }
