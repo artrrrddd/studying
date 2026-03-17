@@ -5,6 +5,7 @@ import { fetchLessonsThunk } from "../redux/thunks/lessonThunks"
 import { Link } from "react-router-dom"
 
 
+
 const Lessons = () => {
 
     const lessons = useSelector(s => s.lessons.items) || []
@@ -31,6 +32,7 @@ const Lessons = () => {
                 ) : (
                 <div>Уроков пока нет</div>
             )}
+
         </div>
     )
 }

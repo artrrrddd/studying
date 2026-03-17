@@ -1,5 +1,37 @@
 import LiquidGlassPane from './LiquidGlassPane'
 import s from './mainpage.module.css'
+import { GlassContainer } from './GlassContainer'
+import { LiquidGlass } from './LiquidGlass'
+
+const bgGradient =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+      <defs>
+        <radialGradient id="g1" cx="20%" cy="20%" r="60%">
+          <stop offset="0%" stop-color="#8cc5ff" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="#8cc5ff" stop-opacity="0" />
+        </radialGradient>
+        <radialGradient id="g2" cx="85%" cy="25%" r="45%">
+          <stop offset="0%" stop-color="#ffba57" stop-opacity="0.85" />
+          <stop offset="100%" stop-color="#ffba57" stop-opacity="0" />
+        </radialGradient>
+        <radialGradient id="g3" cx="50%" cy="85%" r="50%">
+          <stop offset="0%" stop-color="#52e8b5" stop-opacity="0.65" />
+          <stop offset="100%" stop-color="#52e8b5" stop-opacity="0" />
+        </radialGradient>
+        <linearGradient id="base" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#08111f" />
+          <stop offset="45%" stop-color="#10243f" />
+          <stop offset="100%" stop-color="#173763" />
+        </linearGradient>
+      </defs>
+      <rect width="1600" height="900" fill="url(#base)" />
+      <rect width="1600" height="900" fill="url(#g1)" />
+      <rect width="1600" height="900" fill="url(#g2)" />
+      <rect width="1600" height="900" fill="url(#g3)" />
+    </svg>
+  `)
 
 const heroGlassOptions = {
   refraction: 0.028,
@@ -17,7 +49,7 @@ const heroGlassOptions = {
 const MainPage = () => {
   return (
     <main className={s.page}>
-      <div className={s.backdropLayer} aria-hidden="true">
+      {/* <div className={s.backdropLayer} aria-hidden="true">
         <div className={`${s.orb} ${s.orbBlue}`} />
         <div className={`${s.orb} ${s.orbAmber}`} />
         <div className={`${s.orb} ${s.orbMint}`} />
@@ -77,7 +109,36 @@ const MainPage = () => {
             </div>
           </LiquidGlassPane>
         </div>
-      </section>
+      </section> */}
+
+      <div>
+
+        <GlassContainer 
+      imageSrc={bgGradient}
+      style={{ width: '100vw', height: '100vh' }}
+    >
+      
+      {/* 2. Place LiquidGlass components anywhere inside */}
+      <LiquidGlass
+        blurRadiusPx={16}
+        edgeMapStart={0.85} // Start mapping at 85% of the border radius
+        style={{
+          width: 300,
+          height: 200,
+          borderRadius: 24, // The effect automatically adapts to this
+          margin: '100px auto',
+          color: 'white'
+        }}
+      >
+        <div style={{ padding: 20 }}>
+          <h2>Glass Content</h2>
+          <p>This content sits on top of the glass effect.</p>
+        </div>
+      </LiquidGlass>
+
+    </GlassContainer>
+
+      </div>
     </main>
   )
 }

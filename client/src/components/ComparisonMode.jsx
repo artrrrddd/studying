@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import s from './comparison.module.css'
 import {
   DndContext,
@@ -12,6 +13,37 @@ import {
 } from "@dnd-kit/core";
 import Chip, { ChipPreview } from "./Chip";
 import LiquidGlassPane from "./LiquidGlassPane";
+import { GlassContainer } from './GlassContainer'
+
+const bgGradient =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+      <defs>
+        <radialGradient id="g1" cx="20%" cy="20%" r="60%">
+          <stop offset="0%" stop-color="#8cc5ff" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="#8cc5ff" stop-opacity="0" />
+        </radialGradient>
+        <radialGradient id="g2" cx="85%" cy="25%" r="45%">
+          <stop offset="0%" stop-color="#ffba57" stop-opacity="0.85" />
+          <stop offset="100%" stop-color="#ffba57" stop-opacity="0" />
+        </radialGradient>
+        <radialGradient id="g3" cx="50%" cy="85%" r="50%">
+          <stop offset="0%" stop-color="#52e8b5" stop-opacity="0.65" />
+          <stop offset="100%" stop-color="#52e8b5" stop-opacity="0" />
+        </radialGradient>
+        <linearGradient id="base" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#08111f" />
+          <stop offset="45%" stop-color="#10243f" />
+          <stop offset="100%" stop-color="#173763" />
+        </linearGradient>
+      </defs>
+      <rect width="1600" height="900" fill="url(#base)" />
+      <rect width="1600" height="900" fill="url(#g1)" />
+      <rect width="1600" height="900" fill="url(#g2)" />
+      <rect width="1600" height="900" fill="url(#g3)" />
+    </svg>
+  `)
 
 const heroGlassOptions = {
   refraction: 0.028,
@@ -47,6 +79,7 @@ export default function ComparisonMode({
   const [placements, setPlacements] = useState(new Map());
   const [activeQIdx, setActiveQIdx] = useState(null);
   const [activeRect, setActiveRect] = useState(null);
+  const overlayHostRef = useRef(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -110,13 +143,19 @@ export default function ComparisonMode({
 
   return (
     <>
+
       <Styles />
+      <GlassContainer
+      imageSrc={bgGradient}
+      style={{ width: '55vw', height: '85vh' }}
+      >
+
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragStart={onDragStart}
           onDragEnd={onDragEnd}
-        >
+          >
 
           <div className="lf-root">
             <div className="lf-header">
@@ -133,21 +172,17 @@ export default function ComparisonMode({
                 const placedQIdx = answerOccupant.get(ai);
                 const isQPlaced = placements.has(ai);
                 const showUnplaced = !isQPlaced && activeQIdx !== ai;
-
+                
                 return (
                   <div key={ai} className="lf-row">
                     <div className="lf-cell-left">
                       {showUnplaced ? (
                         <div className={s.glassSlot}>
 
-          <LiquidGlassPane
-            paneId={`comparison-liquid-panel-${ai}`}
-            className={s.glassPane}
-            surfaceClassName={s.glassSurface}
-            contentClassName={s.glassContent}
-            options={heroGlassOptions}
-          >
-          </LiquidGlassPane>
+          <Chip
+      id={String(ai)}
+      label={randomQuestions[ai]}
+      />
 
         </div>
                       ) : (
@@ -158,9 +193,9 @@ export default function ComparisonMode({
                     <DropZone id={String(ai)} occupied={placedQIdx !== undefined}>
                       {placedQIdx !== undefined && activeQIdx !== placedQIdx && (
                         <Chip
-                          id={String(placedQIdx)}
-                          label={randomQuestions[placedQIdx]}
-                          placed={true}
+                        id={String(placedQIdx)}
+                        label={randomQuestions[placedQIdx]}
+                        placed={true}
                         />
                       )}
                     </DropZone>
@@ -172,20 +207,27 @@ export default function ComparisonMode({
             </div>
           </div>
 
-          <DragOverlay dropAnimation={{ duration: 160, easing: "ease" }}>
-            {activeQIdx !== null && (
-              <ChipPreview
-                label={randomQuestions[activeQIdx]}
-                className="is-overlay"
-                style={
-                  activeRect
-                    ? { width: `${activeRect.width}px`, height: `${activeRect.height}px` }
-                    : { width: "clamp(220px, 26vw, 360px)" }
-                }
-              />
-            )}
-          </DragOverlay>
+          {overlayHostRef.current
+            ? createPortal(
+                <DragOverlay dropAnimation={{ duration: 160, easing: "ease" }}>
+                  {activeQIdx !== null && (
+                    <ChipPreview
+                      label={randomQuestions[activeQIdx]}
+                      className="is-overlay"
+                      style={
+                        activeRect
+                          ? { width: `${activeRect.width}px`, height: `${activeRect.height}px` }
+                          : { width: "clamp(220px, 26vw, 360px)" }
+                      }
+                    />
+                  )}
+                </DragOverlay>,
+                overlayHostRef.current
+              )
+            : null}
         </DndContext>
+        <div ref={overlayHostRef} className="lf-overlay-host" />
+</GlassContainer>
     </>
   );
 }
@@ -194,7 +236,7 @@ function Styles() {
   return (
     <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&display=swap');
-
+      
       .lf-root {
         font-family: 'Manrope';
         min-height: 80vh;
@@ -422,6 +464,13 @@ function Styles() {
         font-weight: 800;
         color: #fff;
         text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+      }
+
+      .lf-overlay-host {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1000;
       }
     `}</style>
   );
