@@ -14,6 +14,7 @@ import {
 import Chip, { ChipPreview } from "./Chip";
 import LiquidGlassPane from "./LiquidGlassPane";
 import { GlassContainer } from './GlassContainer'
+import wtf from './кочкодром.jpg'
 
 const bgGradient =
   "data:image/svg+xml;utf8," +
@@ -146,7 +147,7 @@ export default function ComparisonMode({
 
       <Styles />
       <GlassContainer
-      imageSrc={bgGradient}
+      imageSrc={wtf}
       style={{ width: '55vw', height: '85vh' }}
       >
 

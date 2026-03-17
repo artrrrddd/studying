@@ -1,4 +1,3 @@
-import { LiquidGlassProps } from './../LiquidGlass';
 type Vec2 = { x: number; y: number }
 
 type RenderParams = {
@@ -18,7 +17,7 @@ import BLUR_V_FRAG from './shaders/liquidGlassBlurV.frag.glsl?raw'
 import COMPOSE_FRAG from './shaders/liquidGlassCompose.frag.glsl?raw'
 
 export type LiquidGlassRenderer = {
-  setImage: (img: HTMLImageElement) => void
+  setImage: (img: CanvasImageSource) => void
   resize: (widthCssPx: number, heightCssPx: number, dpr: number) => void
   render: (params: RenderParams) => void
   dispose: () => void
@@ -242,9 +241,11 @@ export function createLiquidGlassRenderer(canvas: HTMLCanvasElement): LiquidGlas
   let imageNaturalW = 0
   let imageNaturalH = 0
 
-  function setImage(img: HTMLImageElement) {
-    imageNaturalW = img.naturalWidth || img.width
-    imageNaturalH = img.naturalHeight || img.height
+  function setImage(img: CanvasImageSource) {
+    imageNaturalW =
+      'naturalWidth' in img ? img.naturalWidth : 'videoWidth' in img ? img.videoWidth : img.width
+    imageNaturalH =
+      'naturalHeight' in img ? img.naturalHeight : 'videoHeight' in img ? img.videoHeight : img.height
 
     gl.activeTexture(gl.TEXTURE0)
     gl.bindTexture(gl.TEXTURE_2D, imageTex)

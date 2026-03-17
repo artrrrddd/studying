@@ -28,9 +28,9 @@ export function LiquidGlass({
   const capsuleRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const rendererRef = useRef<LiquidGlassRenderer | null>(null)
+  const rectRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null)
 
   const dpr = useMemo(() => Math.min(2, window.devicePixelRatio || 1), [])
-
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -38,7 +38,7 @@ export function LiquidGlass({
     const renderer = createLiquidGlassRenderer(canvas)
     rendererRef.current = renderer
 
-     if (imageElement) {
+    if (imageElement) {
       renderer.setImage(imageElement)
     }
 
@@ -150,6 +150,43 @@ export function LiquidGlass({
     return () => {
       window.removeEventListener('scroll', handleScroll, true)
       window.removeEventListener('resize', handleScroll)
+    }
+  }, [requestRender])
+
+  useEffect(() => {
+    let rafId = 0
+
+    const tick = () => {
+      const el = capsuleRef.current
+      if (el) {
+        const rect = el.getBoundingClientRect()
+        const prev = rectRef.current
+        const next = {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+        }
+
+        if (
+          !prev ||
+          prev.left !== next.left ||
+          prev.top !== next.top ||
+          prev.width !== next.width ||
+          prev.height !== next.height
+        ) {
+          rectRef.current = next
+          requestRender()
+        }
+      }
+
+      rafId = window.requestAnimationFrame(tick)
+    }
+
+    rafId = window.requestAnimationFrame(tick)
+
+    return () => {
+      window.cancelAnimationFrame(rafId)
     }
   }, [requestRender])
 
