@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import html2canvas from "html2canvas";
 import s from './comparison.module.css'
 import {
   DndContext,
@@ -151,7 +150,6 @@ export default function ComparisonMode({
     }
 
     const controller = new AbortController();
-    let objectUrl = null;
 
     const loadBackground = async () => {
       try {
@@ -164,8 +162,14 @@ export default function ComparisonMode({
         }
 
         const blob = await response.blob();
-        objectUrl = URL.createObjectURL(blob);
-        setBackgroundImageUrl(objectUrl);
+        const dataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = () => reject(new Error('Failed to read lesson image'));
+          reader.readAsDataURL(blob);
+        });
+
+        setBackgroundImageUrl(dataUrl);
       } catch (error) {
         if (error.name !== 'AbortError') {
           console.error(error);
@@ -177,9 +181,6 @@ export default function ComparisonMode({
 
     return () => {
       controller.abort();
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
-      }
     };
   }, [lessonId, screenshotMode]);
 
@@ -208,40 +209,6 @@ export default function ComparisonMode({
           // Ignore font loading errors and continue with capture.
         }
       }
-
-      const canvas = await html2canvas(el, {
-        backgroundColor: null,
-        logging: true,
-        useCORS: true,
-        foreignObjectRendering: true,
-        scale: Math.min(2, window.devicePixelRatio || 1),
-        ignoreElements: (node) =>
-          node instanceof HTMLElement && node.dataset.html2canvasIgnore === 'true',
-      })
-
-      if (cancelled) return
-
-      setSnapshotSource(canvas)
-      setSnapshotVersion((v) => v + 1)
-
-      const debugId = 'liquid-glass-html2canvas-debug'
-      const existing = document.getElementById(debugId)
-      if (existing) existing.remove()
-
-      const debugCanvas = canvas.cloneNode(true)
-      debugCanvas.id = debugId
-      debugCanvas.style.position = 'fixed'
-      debugCanvas.style.top = '12px'
-      debugCanvas.style.left = '12px'
-      debugCanvas.style.width = '360px'
-      debugCanvas.style.height = 'auto'
-      debugCanvas.style.maxWidth = '40vw'
-      debugCanvas.style.zIndex = '999999'
-      debugCanvas.style.border = '2px solid #ff4d4f'
-      debugCanvas.style.boxShadow = '0 12px 30px rgba(0,0,0,0.35)'
-      debugCanvas.style.background = '#111'
-      debugCanvas.style.pointerEvents = 'none'
-      document.body.appendChild(debugCanvas)
     }
 
     void capture()
@@ -250,6 +217,9 @@ export default function ComparisonMode({
       cancelled = true
     }
   }, [remaining])
+
+  console.log(backgroundImageUrl);
+  
 
   return (
     
