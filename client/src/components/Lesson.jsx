@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { fetchLessonByIdThunk } from "../redux/thunks/lessonThunks"
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useSearchParams } from "react-router-dom"
 import { useEffect, useState, useRef } from "react"
 import s from './lesson.module.css'
 import Card from "./Card"
@@ -34,6 +34,8 @@ const Lesson = () => {
     const [history, setHistory] = useState([])
     
     const { id } = useParams()    
+    const [searchParams] = useSearchParams()
+    const requestedMode = searchParams.get('mode')
     
     const dispatch = useDispatch()
     
@@ -51,6 +53,17 @@ const Lesson = () => {
             )))
         }
     },[lesson])
+
+    useEffect(() => {
+        if (!lesson?.cards?.length) {
+            return
+        }
+
+        if (requestedMode === 'comparison') {
+            setStudying({ bool: true, mode: 'comparison' })
+            setBurgerIsOpen(false)
+        }
+    }, [lesson, requestedMode])
     
 
     const [shareSuccess, setShareSuccess] = useState(false)
@@ -180,7 +193,12 @@ const Lesson = () => {
 
         if (studying.mode === 'comparison') {
             return (
-                <>
+                <div
+                    data-lesson-screenshot-root
+                    data-lesson-screenshot-ready={
+                        lesson && randomQuestions.length && randomAnswers.length ? 'true' : 'false'
+                    }
+                >
                 <ComparisonMode 
                     remaining={remaining}
                     setRemaining={setRemaining}
@@ -195,7 +213,7 @@ const Lesson = () => {
                     correct={correct}
                     setHistory={setHistory}
                     />
-                </>
+                </div>
             )
         }
 
