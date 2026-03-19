@@ -5,6 +5,12 @@ const ApiError = require('../exceptions/api-error');
 
 class ScreenshotService {
   async launchBrowser() {
+    if (process.env.PLAYWRIGHT_WS_ENDPOINT) {
+      return playwrightCore.chromium.connect(
+        process.env.PLAYWRIGHT_WS_ENDPOINT
+      );
+    }
+
     if (process.env.VERCEL === '1' || process.env.AWS_REGION) {
       const executablePath = await chromium.executablePath();
 
@@ -36,7 +42,7 @@ class ScreenshotService {
 
   async renderLessonPng({ lessonId, requestBaseUrl }) {
     const appBaseUrl = this.getAppBaseUrl(requestBaseUrl);
-    const targetUrl = `${appBaseUrl}/export/lessons/${lessonId}`;
+    const targetUrl = `${appBaseUrl}/lessons/${lessonId}`;
     const browser = await this.launchBrowser();
 
     try {
@@ -50,12 +56,14 @@ class ScreenshotService {
         timeout: 30000,
       });
 
-      const exportRoot = page.locator('[data-export-root]');
-      const readyRoot = page.locator('[data-export-root][data-export-ready="true"]');
-      await exportRoot.waitFor({ state: 'visible', timeout: 15000 });
+      const screenshotRoot = page.locator('[data-lesson-screenshot-root]');
+      const readyRoot = page.locator(
+        '[data-lesson-screenshot-root][data-lesson-screenshot-ready="true"]'
+      );
+      await screenshotRoot.waitFor({ state: 'visible', timeout: 15000 });
       await readyRoot.waitFor({ state: 'attached', timeout: 15000 });
 
-      return await exportRoot.screenshot({
+      return await screenshotRoot.screenshot({
         type: 'png',
       });
     } catch (e) {

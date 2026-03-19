@@ -228,6 +228,9 @@ const Lesson = () => {
 
         !edittingMode &&
             <div className={s.cont}>
+            <div
+            data-lesson-screenshot-root
+            data-lesson-screenshot-ready={lesson ? 'true' : 'false'}>
             <span>
             <h1>
             {lesson?.title}
@@ -300,6 +303,7 @@ const Lesson = () => {
                     {lesson?.cards?.map((e) => {
                         return <Card word={e.word} translate={e.translate}></Card>
                     })}
+                    </div>
                     </div>
                     </div>
                     }
