@@ -42,7 +42,7 @@ class ScreenshotService {
 
   async renderLessonPng({ lessonId, requestBaseUrl }) {
     const appBaseUrl = this.getAppBaseUrl(requestBaseUrl);
-    const targetUrl = `${appBaseUrl}/lessons/${lessonId}?mode=comparison`;
+    const targetUrl = `${appBaseUrl}/lessons/${lessonId}?mode=comparison&screenshot=1`;
     const browser = await this.launchBrowser();
 
     try {

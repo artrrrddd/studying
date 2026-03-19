@@ -200,6 +200,8 @@ const Lesson = () => {
                     }
                 >
                 <ComparisonMode 
+                    lessonId={id}
+                    screenshotMode={requestedMode === 'comparison' && searchParams.get('screenshot') === '1'}
                     remaining={remaining}
                     setRemaining={setRemaining}
                     again={again}

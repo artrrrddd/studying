@@ -74,6 +74,8 @@ function DropZone({ id, children, occupied }) {
 }
 
 export default function ComparisonMode({
+  lessonId,
+  screenshotMode = false,
   randomQuestions = [],
   randomAnswers = [],
   remaining,
@@ -83,6 +85,7 @@ export default function ComparisonMode({
   const [activeRect, setActiveRect] = useState(null);
   const [snapshotSource, setSnapshotSource] = useState(null);
   const [snapshotVersion, setSnapshotVersion] = useState(0);
+  const [backgroundImageUrl, setBackgroundImageUrl] = useState(null);
   const overlayHostRef = useRef(null);
   const sceneRef = useRef(null);
 
@@ -141,6 +144,44 @@ export default function ComparisonMode({
   }
 
   const progress = (placements.size / 4) * 100;
+
+  useEffect(() => {
+    if (!lessonId || screenshotMode) {
+      return undefined;
+    }
+
+    const controller = new AbortController();
+    let objectUrl = null;
+
+    const loadBackground = async () => {
+      try {
+        const response = await fetch(`/api/export/lessons/${lessonId}/image`, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to load lesson image: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        objectUrl = URL.createObjectURL(blob);
+        setBackgroundImageUrl(objectUrl);
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error(error);
+        }
+      }
+    };
+
+    void loadBackground();
+
+    return () => {
+      controller.abort();
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [lessonId, screenshotMode]);
 
   useEffect(() => {
     if (!remaining?.length) return
@@ -213,7 +254,7 @@ export default function ComparisonMode({
   return (
     
     <GlassContainer
-    imageSrc={wtf}
+    imageSrc={backgroundImageUrl || wtf}
     snapshotSource={snapshotSource}
     snapshotVersion={snapshotVersion}
     style={{ width: '100vw', minHeight: '100vh' }}
