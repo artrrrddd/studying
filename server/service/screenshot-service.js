@@ -1,7 +1,23 @@
-const { chromium } = require('playwright');
+const playwright = require('playwright');
+const playwrightCore = require('playwright-core');
+const chromium = require('@sparticuz/chromium');
 const ApiError = require('../exceptions/api-error');
 
 class ScreenshotService {
+  async launchBrowser() {
+    if (process.env.VERCEL === '1' || process.env.AWS_REGION) {
+      const executablePath = await chromium.executablePath();
+
+      return playwrightCore.chromium.launch({
+        args: chromium.args,
+        executablePath,
+        headless: true,
+      });
+    }
+
+    return playwright.chromium.launch({ headless: true });
+  }
+
   getAppBaseUrl(requestBaseUrl) {
     if (process.env.CLIENT_BASE_URL) {
       return process.env.CLIENT_BASE_URL.replace(/\/$/, '');
@@ -21,7 +37,7 @@ class ScreenshotService {
   async renderLessonPng({ lessonId, requestBaseUrl }) {
     const appBaseUrl = this.getAppBaseUrl(requestBaseUrl);
     const targetUrl = `${appBaseUrl}/export/lessons/${lessonId}`;
-    const browser = await chromium.launch({ headless: true });
+    const browser = await this.launchBrowser();
 
     try {
       const page = await browser.newPage({
