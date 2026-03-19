@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom"
 import MainPage from './components/MainPage'
 import Create from './components/Create'
 import AuthPage from './components/AuthPage'
@@ -12,17 +12,15 @@ import Cards from './components/Cards'
 import Import from './components/Import'
 import Lessons from './components/Lessons'
 import Lesson from './components/Lesson'
+import LessonExportPage from './components/LessonExportPage'
 
-function AppContent() {
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(checkThunk())
-  }, [dispatch])
+function AppRoutes() {
+  const location = useLocation()
+  const isExportRoute = location.pathname.startsWith('/export/')
 
   return (
-    <BrowserRouter>
-    <Header />
+    <>
+      {!isExportRoute && <Header />}
       <Routes>
         <Route path="*" element={<MainPage />} />
         <Route path="create" element={<Create />} />
@@ -33,7 +31,22 @@ function AppContent() {
         <Route path="import" element={<Import />}/>
         <Route path="lessons" element={<Lessons/>}/>
         <Route path="lessons/:id" element={<Lesson/>}/>
+        <Route path="export/lessons/:id" element={<LessonExportPage />} />
       </Routes>
+    </>
+  )
+}
+
+function AppContent() {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(checkThunk())
+  }, [dispatch])
+
+  return (
+    <BrowserRouter>
+      <AppRoutes />
     </BrowserRouter>
   )
 }

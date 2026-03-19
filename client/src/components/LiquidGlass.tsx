@@ -23,7 +23,7 @@ export function LiquidGlass({
     throw new Error('LiquidGlass must be used inside <GlassContainer>')
   }
 
-  const { containerRef, containerSize, imageElement, imageVersion } = container
+  const { containerRef, containerSize, imageElement, imageVersion, snapshotSource, snapshotVersion } = container
 
   const capsuleRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -31,6 +31,7 @@ export function LiquidGlass({
   const rectRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null)
 
   const dpr = useMemo(() => Math.min(2, window.devicePixelRatio || 1), [])
+  const activeSource = snapshotSource ?? imageElement
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -38,15 +39,15 @@ export function LiquidGlass({
     const renderer = createLiquidGlassRenderer(canvas)
     rendererRef.current = renderer
 
-    if (imageElement) {
-      renderer.setImage(imageElement)
+    if (activeSource) {
+      renderer.setImage(activeSource)
     }
 
     return () => {
       renderer.dispose()
       rendererRef.current = null
     }
-  }, [imageElement])
+  }, [activeSource])
 
 
   const rafRef = useRef<number | null>(null)
@@ -124,14 +125,14 @@ export function LiquidGlass({
   // This ensures the glass effect updates in the same frame as the background image
   useLayoutEffect(() => {
     const r = rendererRef.current
-    if (!r || !imageElement) return
-    r.setImage(imageElement)
+    if (!r || !activeSource) return
+    r.setImage(activeSource)
     requestRender()
-  }, [imageElement, imageVersion, requestRender])
+  }, [activeSource, imageVersion, requestRender, snapshotVersion])
 
   useEffect(() => {
     requestRender()
-  }, [requestRender, blurRadiusPx, edgeMapStart, edgeMapMaxPx, containerSize?.width, containerSize?.height, imageElement, className, style])
+  }, [requestRender, blurRadiusPx, edgeMapStart, edgeMapMaxPx, containerSize?.width, containerSize?.height, activeSource, className, style])
 
   useEffect(() => {
     const el = capsuleRef.current
@@ -193,6 +194,7 @@ export function LiquidGlass({
   return (
     <div
       ref={capsuleRef}
+      data-html2canvas-ignore="true"
       className={className}
       style={{
         position: 'relative',
@@ -205,6 +207,7 @@ export function LiquidGlass({
     >
       <canvas
         ref={canvasRef}
+        data-html2canvas-ignore="true"
         style={{
           position: 'absolute',
           inset: 0,

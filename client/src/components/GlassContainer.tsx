@@ -11,10 +11,20 @@ import { GlassContainerContext, type GlassContainerContextValue } from './GlassC
 export type GlassContainerProps = PropsWithChildren<
   {
     imageSrc: string
+    snapshotSource?: HTMLCanvasElement | null
+    snapshotVersion?: number
   } & React.ComponentPropsWithoutRef<'div'>
 >
 
-export function GlassContainer({ imageSrc, className, style, children, ...divProps }: GlassContainerProps) {
+export function GlassContainer({
+  imageSrc,
+  snapshotSource = null,
+  snapshotVersion = 0,
+  className,
+  style,
+  children,
+  ...divProps
+}: GlassContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [containerSize, setContainerSize] = useState<
     { width: number; height: number } | null
@@ -64,8 +74,8 @@ export function GlassContainer({ imageSrc, className, style, children, ...divPro
   }, [])
 
   const value = useMemo<GlassContainerContextValue>(
-    () => ({ containerRef, containerSize, imageElement, imageVersion }),
-    [containerSize, imageElement, imageVersion],
+    () => ({ containerRef, containerSize, imageElement, imageVersion, snapshotSource, snapshotVersion }),
+    [containerSize, imageElement, imageVersion, snapshotSource, snapshotVersion],
   )
 
   return (

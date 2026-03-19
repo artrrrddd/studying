@@ -2,6 +2,7 @@ const Router = require('express').Router;
 const UserController = require('../controllers/user-controller');
 const CardController = require('../controllers/card-controller');
 const LessonController = require('../controllers/lesson-controller');
+const ExportController = require('../controllers/export-controller');
 const router = new Router();
 const { body } = require('express-validator');
 const authMiddleware = require('../middleware/auth-middleware');
@@ -52,6 +53,7 @@ router.post(
 router.get('/lessons', LessonController.getAll);
 router.get('/myLessons', authMiddleware, LessonController.getMine);
 router.get('/lessons/:id', LessonController.getById);
+router.get('/export/lessons/:id/image', ExportController.lessonImage);
 
 router.patch(
   '/lessons/:id',
