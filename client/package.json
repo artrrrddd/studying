@@ -16,7 +16,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@marcosdemik/liquidglass": "^2.0.5",
     "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.5.0",
+    "@react-three/fiber": "^9.6.1",
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.13.4",
     "html2canvas": "^1.4.1",

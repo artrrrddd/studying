@@ -13,14 +13,16 @@ import Import from './components/Import'
 import Lessons from './components/Lessons'
 import Lesson from './components/Lesson'
 import LessonExportPage from './components/LessonExportPage'
+import ComparisonMode from './components/ComparisonMode'
 
 function AppRoutes() {
-  const location = useLocation()
-  const isExportRoute = location.pathname.startsWith('/export/')
+
+  const location = useLocation();
+  const isComparison = location.pathname.endsWith('comparison')
 
   return (
     <>
-      {!isExportRoute && <Header />}
+      { !isComparison && <Header /> }
       <Routes>
         <Route path="*" element={<MainPage />} />
         <Route path="create" element={<Create />} />
@@ -31,7 +33,7 @@ function AppRoutes() {
         <Route path="import" element={<Import />}/>
         <Route path="lessons" element={<Lessons/>}/>
         <Route path="lessons/:id" element={<Lesson/>}/>
-        <Route path="export/lessons/:id" element={<LessonExportPage />} />
+        <Route path="lessons/:id/comparison" element={<ComparisonMode/>}/>
       </Routes>
     </>
   )

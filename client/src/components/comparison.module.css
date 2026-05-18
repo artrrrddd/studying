@@ -171,94 +171,42 @@
   box-shadow: 0 32px 90px rgba(4, 10, 20, 0.35);
 }
 
-.backdropLayer {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.orb {
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(20px);
-  opacity: 0.8;
-}
-
-.orbBlue {
-  top: 6%;
-  left: -4%;
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(circle, rgba(120, 211, 255, 0.95), rgba(120, 211, 255, 0));
-}
-
-.orbAmber {
-  right: 6%;
-  top: 18%;
-  width: 220px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(255, 186, 87, 0.92), rgba(255, 186, 87, 0));
-}
-
-.orbMint {
-  bottom: -8%;
-  left: 35%;
-  width: 360px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(82, 232, 181, 0.72), rgba(82, 232, 181, 0));
-}
-
-.grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-  background-size: 72px 72px;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), transparent 85%);
-}
-
-.chipShell {
-  width: 100%;
-  min-height: 88px;
-  cursor: grab;
-  user-select: none;
-  touch-action: none;
-  position: relative;
-}
-
-.chipShell.is-overlay {
-  cursor: grabbing;
-  opacity: 1 !important;
-}
-
-.chipShell[data-dragging="true"] {
-  opacity: 0;
-}
-
-.chipGlassPane {
-  position: relative;
-  width: 100%;
-  min-height: 88px;
-  border-radius: 18px;
-  overflow: hidden;
-}
-
-.chipGlassContent {
-  position: relative;
-  min-height: 88px;
+.draggable {
+  min-width: 15vw;
+  min-height: 6vh;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 18px;
-  box-sizing: border-box;
-  color: #fff;
-  text-align: center;
-  line-height: 1.3;
-  white-space: normal;
-  word-break: break-word;
+  height: fit-content;
 }
 
-.chipPlaced .chipGlassContent {
-  color: #fff;
+.droppable {
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  min-width: 15vw;
+  min-height: 6vh;
+  border-radius: 10px;
+  border: 1.5px solid;
+}
+
+.comparisonWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  align-items: center;
+  justify-content: center;
+  gap: 1vh;
+}
+
+.rowOfDnD {
+  display: flex;
+  gap: 1vw;
+}
+
+.question {
+    display: flex;
+  justify-content: center;
+  align-items: center;  
+  min-width: 15vw;
+  min-height: 6vh;
 }
