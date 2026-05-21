@@ -52,7 +52,7 @@
 
 .snapActive {
     box-shadow: 0 0 15px 4px rgba(0,255,150,0.7);
-    transform: scale(1.05);
+    transform: scale(2);
     background-color: #00ff95;
 }
 
@@ -172,19 +172,20 @@
 }
 
 .draggable {
-  min-width: 15vw;
-  min-height: 6vh;
+  width: 15vw;
+  height: 7vh;
   display: flex;
+  border-radius: 10px;
   align-items: center;
-  height: fit-content;
+  border: 1.5px solid;
 }
 
 .droppable {
   display: flex;
   justify-content: center;
   align-items: center;  
-  min-width: 15vw;
-  min-height: 6vh;
+  width: 15vw;
+  height: 7vh;
   border-radius: 10px;
   border: 1.5px solid;
 }
@@ -195,7 +196,7 @@
   width: 80vw;
   align-items: center;
   justify-content: center;
-  gap: 1vh;
+  gap: 2vh;
 }
 
 .rowOfDnD {
@@ -204,9 +205,14 @@
 }
 
 .question {
-    display: flex;
-  justify-content: center;
+  display: flex;
   align-items: center;  
   min-width: 15vw;
   min-height: 6vh;
+}
+
+.bottomCont {
+  width: 45vw;
+  display: flex;
+  justify-content: space-between;
 }

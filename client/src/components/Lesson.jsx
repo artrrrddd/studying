@@ -145,10 +145,7 @@ const Lesson = () => {
         .slice(0, 3)
 
     const indexesForQuestions = [...otherQuestions, questionIndex].sort(() => Math.random() - 0.5)
-    setRandomQuestions(indexesForQuestions.map(i => questions[i]))
-
-    console.log(questions);
-    
+    setRandomQuestions(indexesForQuestions.map(i => questions[i]))    
 
 }, [remaining])
 
@@ -201,7 +198,6 @@ const Lesson = () => {
                 >
                 <ComparisonMode 
                     lessonId={id}
-                    screenshotMode={requestedMode === 'comparison' && searchParams.get('screenshot') === '1'}
                     remaining={remaining}
                     setRemaining={setRemaining}
                     again={again}
