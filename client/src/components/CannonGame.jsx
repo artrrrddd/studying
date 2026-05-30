@@ -4,13 +4,13 @@ import { useRef, useState, useEffect } from 'react'
 const BALL_COUNT = 10
 const BALL_SIZE = 150
 const BALL_RADIUS = BALL_SIZE / 2
-const SPEED = 0.7
+const SPEED = 0.8
 const BOUNCE_FORCE = 1
 const MIN_CANNON_ANGLE = -90
 const MAX_CANNON_ANGLE = 90
 const PROJECTILE_SIZE = 50
 const PROJECTILE_RADIUS = PROJECTILE_SIZE / 2
-const PROJECTILE_SPEED = 4
+const PROJECTILE_SPEED = 3
 
 const getRandomPosition = (maxX, maxY) => ({
     x: Math.random() * maxX,
