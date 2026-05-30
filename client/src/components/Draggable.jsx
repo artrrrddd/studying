@@ -4,6 +4,7 @@ import s from './comparison.module.css'
 export function Draggable(props) {
   const {ref} = useDraggable({
     id: props.id,
+    disabled: props.disabled
   });
 
   return (

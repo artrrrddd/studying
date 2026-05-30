@@ -14,6 +14,7 @@ import Lessons from './components/Lessons'
 import Lesson from './components/Lesson'
 import LessonExportPage from './components/LessonExportPage'
 import ComparisonMode from './components/ComparisonMode'
+import CannonGame from './components/CannonGame'
 
 function AppRoutes() {
 
@@ -33,7 +34,8 @@ function AppRoutes() {
         <Route path="import" element={<Import />}/>
         <Route path="lessons" element={<Lessons/>}/>
         <Route path="lessons/:id" element={<Lesson/>}/>
-        <Route path="lessons/:id/comparison" element={<ComparisonMode/>}/>
+        <Route path="lessons/:id/comparison" element={<ComparisonMode />}/>
+        <Route path="lessons/:id/cannon" element={<CannonGame />}/>
       </Routes>
     </>
   )

@@ -216,3 +216,21 @@
   display: flex;
   justify-content: space-between;
 }
+
+.rightBTNs {
+  min-width: 10vw;
+  display: flex;
+  justify-content: space-between;
+}
+
+.finalDisplay {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+
+.btnCont {
+  display: flex;
+  gap: 1vw;
+}

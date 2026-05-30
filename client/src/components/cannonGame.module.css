@@ -1,0 +1,79 @@
+.bg {
+    width: 100vw;
+    height:91vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.layout {
+    width: 100vw;
+    height: 70vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.ball {
+    width: 150px;
+    height: 150px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.projectile {
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 3;
+}
+
+.cannonBase {
+    z-index: 666;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+}
+
+.cannon {
+    z-index: 666;
+    width: 100px;
+    height: 140px;
+    position: absolute;
+    left: 50px;
+    bottom: 100px;
+    transform-origin: 50% 100%;
+    will-change: transform;
+    z-index: 2;
+}
+
+.cannon::before {
+    z-index: 666;
+    content: "";
+    display: block;
+    width: 100px;
+    height: 180px;
+    background-color: black;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.cannonCircle {
+    z-index: 666;
+    width: 200px;
+    height: 200px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+}
