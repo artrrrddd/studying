@@ -4,47 +4,8 @@
   width: min(1180px, calc(100vw - 32px));
   overflow: hidden;
   border-radius: 36px;
-  background:
-    radial-gradient(circle at top left, rgba(140, 197, 255, 0.26), transparent 32%),
-    linear-gradient(135deg, #08111f 0%, #10243f 45%, #173763 100%);
   box-shadow: 0 32px 90px rgba(4, 10, 20, 0.35);
-}
-
-.backdropLayer {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.orb {
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(20px);
-  opacity: 0.8;
-}
-
-.orbBlue {
-  top: 6%;
-  left: -4%;
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(circle, rgba(120, 211, 255, 0.95), rgba(120, 211, 255, 0));
-}
-
-.orbAmber {
-  right: 6%;
-  top: 18%;
-  width: 220px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(255, 186, 87, 0.92), rgba(255, 186, 87, 0));
-}
-
-.orbMint {
-  bottom: -8%;
-  left: 35%;
-  width: 360px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(82, 232, 181, 0.72), rgba(82, 232, 181, 0));
+  background-color: #FAFAFA;
 }
 
 .grid {
@@ -242,4 +203,26 @@
   .metricRow {
     grid-template-columns: 1fr;
   }
+}
+
+.note {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 225px;
+  height: 300px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;
+}
+
+.notesRow {
+  display: flex;
 }

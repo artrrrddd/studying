@@ -1,77 +1,85 @@
 import s from './mainpage.module.css'
 
+import blueNote from '../../public/blueNote.webp'
+import pinkNote from '../../public/pinkNote.webp'
+
+import yellowNote from '../../public/yellowNote.webp'
+import greenNote from '../../public/greenNote.webp'
+
+import purpleNote from '../../public/purpleNote.webp'
+import beigeNote from '../../public/beigeNote.webp'
+
+import titleNote from '../../public/titleNote.webp'
+import whiteNote from '../../public/whiteNote.webp'
+
 const MainPage = () => {
   return (
-    <main className={s.page}>
-      {/* <div className={s.backdropLayer} aria-hidden="true">
-        <div className={`${s.orb} ${s.orbBlue}`} />
-        <div className={`${s.orb} ${s.orbAmber}`} />
-        <div className={`${s.orb} ${s.orbMint}`} />
-        <div className={s.grid} />
+    <>
+      <div className={s.main}>
+        <div className={s.notesRow}>
+        <div
+        className={s.note}
+        style={{
+          backgroundImage: `url(${greenNote})`,
+        }}>
+          заметка
+        </div>
+
+      <div className={s.note}
+      style={{
+        backgroundImage: `url(${blueNote})`,
+      }}>
+        заметка
       </div>
 
-      <section className={s.stage}>
-        <div className={s.copy}>
-          <span className={s.kicker}>liquidGL integration</span>
-          <h1>Liquid glass panel integrated into the React app</h1>
-          <p>
-            The panel uses the original liquidGL runtime, bundled html2canvas, and a
-            dedicated content layer that should stay readable above the refraction.
-          </p>
-          <div className={s.badges}>
-            <span>WebGL</span>
-            <span>html2canvas</span>
-            <span>Vite</span>
-            <span>React</span>
-          </div>
+        <div
+        className={s.note}
+        style={{
+          backgroundImage: `url(${yellowNote})`,
+        }}>
+          заметка
         </div>
 
-        <div className={s.glassSlot}>
-          <LiquidGlassPane
-            paneId="main-liquid-panel"
-            className={s.glassPane}
-            surfaceClassName={s.glassSurface}
-            contentClassName={s.glassContent}
-            options={heroGlassOptions}
-          >
-            <div className={s.metricRow}>
-              <div className={s.metricCard}>
-                <span>Refraction</span>
-                <strong>0.028</strong>
-              </div>
-              <div className={s.metricCard}>
-                <span>Frost</span>
-                <strong>1.2px</strong>
-              </div>
-              <div className={s.metricCard}>
-                <span>Tilt</span>
-                <strong>off</strong>
-              </div>
-            </div>
-
-            <div className={s.panelBody}>
-              <div>
-                <p className={s.panelEyebrow}>Ready for UI</p>
-                <h2>The text layer should remain visible after liquidGL initializes</h2>
-              </div>
-
-              <div className={s.checkList}>
-                <p>Single initialization guards prevent duplicate lens setup.</p>
-                <p>Reveal and extra helper layers are disabled for baseline stability.</p>
-                <p>The content is rendered inside the required .content child layer.</p>
-              </div>
-            </div>
-          </LiquidGlassPane>
+      <div
+      className={s.note}
+      style={{
+        backgroundImage: `url(${pinkNote})`,
+      }}>
+        заметка
+      </div>
         </div>
-      </section> */}
-
-      <div>
-        <div style={{ padding: 20 }}>
-          <h2>awdasfasd</h2>
-          <p>asdafgdsfgsd</p>
+      
+      <div className={s.notesRow}>
+      <div
+      className={s.note}
+      style={{
+        backgroundImage: `url(${purpleNote})`,
+      }}>
+        заметка
+      </div>
+      <div
+      className={s.note}
+      style={{
+        backgroundImage: `url(${beigeNote})`,
+      }}>
+        заметка
+      </div>
+      <div
+      className={s.note}
+      style={{
+        backgroundImage: `url(${titleNote})`,
+      }}>
+      </div>
+      <div
+      className={s.note}
+      style={{
+        backgroundImage: `url(${whiteNote})`,
+      }}>
+        заметка
+      </div>
         </div>
       </div>
-    </main>
+    </>
   )
 }
 
