@@ -243,10 +243,10 @@
 .plantNote::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -10px;
   z-index: -1;
   background-image: var(--note-image);
-  background-size: contain;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
   filter: none;
@@ -295,6 +295,7 @@
   flex-direction: column;
   justify-content: center;  
   align-items: center;
+  max-width: 80vw;
 }
 
 .notesRow {
@@ -327,4 +328,11 @@
   align-items: center;
   text-align: center;
   z-index: 1;
+}
+
+.mainWrapper {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 5vh;
 }

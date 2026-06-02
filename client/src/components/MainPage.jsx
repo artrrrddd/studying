@@ -27,6 +27,7 @@ const lessonMouseDown = (lesson) => {
 const MainPage = () => {
   return (
     <>
+    <div className={s.mainWrapper}>
       <section className={s.main}>
         <div className={s.rowWrapper}>
         <div className={s.notesRow}>
@@ -214,6 +215,7 @@ const MainPage = () => {
           </div>
           
       </section>
+          </div>
     </>
   )
 }
