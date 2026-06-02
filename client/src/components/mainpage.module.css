@@ -206,17 +206,91 @@
 }
 
 .note {
+  position: relative;
+  z-index: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 225px;
-  height: 300px;
+  width: 180px;
+  height: 200px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  transition: transform 180ms ease;
+  transform-origin: right bottom;
+}
+
+.card {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 190px;
+  height: 250px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 180ms ease;
+  transform-origin: right bottom;
+}
+
+
+.plantNote {
+  background-image: none;
+}
+
+.plantNote::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--note-image);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: none;
+  transition: filter 1ms ease;
+  pointer-events: none;
+}
+
+.plantNote:hover {
+  transform: translateY(-0.5px) rotate(0.5deg);
+}
+
+.cardInner {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 50%;
+  bottom: 1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 1;
+}
+
+.note:hover {
+  z-index: 0;
+  transform: translateY(-0.5px) rotate(0.5deg);
+}
+
+.line {
+  width: 96%;
+  height: 1px;
+  margin: 0;
+  background-color: #e6dece;
+  flex-shrink: 0;
+  z-index: 100;
 }
 
 .main {
+  border-radius: 10px;
+  background-color: #fdf9f2;
+  padding: 0.5vw;
   display: flex;
   flex-direction: column;
   justify-content: center;  
@@ -224,5 +298,33 @@
 }
 
 .notesRow {
+  padding: 0.1vw;
+  border-radius: 10px;
+  background-color: #FAFAFA;
   display: flex;
+}
+
+.rowWrapper {
+  display: flex;
+  border-radius: 10px;
+}
+
+.wrapForCards {
+  display: flex;
+  flex-direction: row;
+}
+
+.cardInnerHistory {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 50%;
+  bottom: 1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 1;
 }
