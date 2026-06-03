@@ -146,7 +146,6 @@ const LessonCard = (props) => {
         case 'empty':
             return (
                 <div
-        onClick={() => lessonMouseDown('empty')}
         className={`${s.card} ${s.plantNote}`}
         style={{
           '--note-image': `url(${empty})`,
