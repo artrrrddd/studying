@@ -1,5 +1,10 @@
 import s from './mainpage.module.css'
 
+import { Link } from "react-router-dom";
+
+
+import LessonCard from './lessonCard'
+
 import blueNote from '../../public/blueNote.webp'
 import pinkNote from '../../public/pinkNote.webp'
 import yellowNote from '../../public/yellowNote.webp'
@@ -10,23 +15,26 @@ import beigeNote from '../../public/beigeNote.webp'
 import titleNote from '../../public/titleNote.webp'
 import whiteNote from '../../public/whiteNote.webp'
 
-import uk from '../../public/uk.webp'
-import chinese from '../../public/chinese.webp'
-import geography from '../../public/geography.webp'
-import biology from '../../public/biology.webp'
-import history from '../../public/history.webp'
-import socialScience from '../../public/socialScience.webp'
-import empty from '../../public/empty.webp'
-
-
-const lessonMouseDown = (lesson) => {
-  alert(`нажатие на ${lesson}`)
-}
-
-
 const MainPage = () => {
   return (
     <>
+    <div className={s.mainGrid}>
+      <section className={s.navSection}>
+        <div>logo</div>
+            <div className={s.line}>
+        </div>
+        <div className={s.navBtnsWrapper}>
+        <Link to='/'>
+          <button className={s.navBtn}>Главная</button>
+        </Link>
+        <Link to='/cards'>
+          <button className={s.navBtn}>Карточки</button>
+        </Link>
+        <Link to='/lessons'>
+          <button className={s.navBtn}>Уроки</button>
+        </Link>
+        </div>
+      </section>
     <div className={s.mainWrapper}>
       <section className={s.main}>
         <div className={s.rowWrapper}>
@@ -64,7 +72,6 @@ const MainPage = () => {
         </div>
         </div>
         <div className={s.line}>
-
         </div>
       <div className={s.rowWrapper2}>
 
@@ -101,119 +108,17 @@ const MainPage = () => {
       </section>
       <section>
         <div className={s.wrapForCards}>
-
-        <div
-        onClick={() => lessonMouseDown('chinese')}
-        className={`${s.card} ${s.plantNote}`}
-        style={{
-          '--note-image': `url(${chinese})`,
-        }}>
-            <div className={s.cardInner}>
-              <div>
-              Заметка
-              </div>
-              <div>
-                19 вопросов
-              </div>
-            </div>
+          <LessonCard theme='history'/>
+          <LessonCard theme='biology'/>
+          <LessonCard theme='socialScience'/>
+          {/* <LessonCard theme='chinese'/>
+          <LessonCard theme='uk'/>
+          <LessonCard theme='geography'/> */}
+          <LessonCard theme='empty'/>
+        </div>
+      </section>
           </div>
-
-          <div
-        onClick={() => lessonMouseDown('geography')}
-        className={`${s.card} ${s.plantNote}`}
-        style={{
-          '--note-image': `url(${geography})`,
-        }}>
-            <div className={s.cardInner}>
-              <div>
-              Заметка
-              </div>
-              <div>
-                19 вопросов
-              </div>
-            </div>
-          </div>
-
-          <div
-        onClick={() => lessonMouseDown('biology')}
-        className={`${s.card} ${s.plantNote}`}
-        style={{
-          '--note-image': `url(${biology})`,
-        }}>
-            <div className={s.cardInner}>
-              <div>
-              Заметка
-              </div>
-              <div>
-                19 вопросов
-              </div>
-            </div>
-          </div>
-
-          <div
-        onClick={() => lessonMouseDown('history')}
-        className={`${s.card} ${s.plantNote}`}
-        style={{
-          '--note-image': `url(${history})`,
-        }}>
-            <div className={s.cardInner}>
-              <div>
-              Заметка
-              </div>
-              <div>
-                19 вопросов
-              </div>
-            </div>
-          </div>
-
-          <div
-        onClick={() => lessonMouseDown('socialScience')}
-        className={`${s.card} ${s.plantNote}`}
-        style={{
-          '--note-image': `url(${socialScience})`,
-        }}>
-            <div className={s.cardInner}>
-              <div>
-              Заметка
-              </div>
-              <div>
-                19 вопросов
-              </div>
-            </div>
-          </div>
-
-
-          <div
-        onClick={() => lessonMouseDown('uk')}
-        className={`${s.card} ${s.plantNote}`}
-        style={{
-          '--note-image': `url(${uk})`,
-        }}>
-            <div className={s.cardInnerHistory}>
-              <div>
-              Заметка
-              </div>
-              <div>
-                19 вопросов
-              </div>
-            </div>
-          </div>
-
-          <div
-        onClick={() => lessonMouseDown('empty')}
-        className={`${s.card} ${s.plantNote}`}
-        style={{
-          '--note-image': `url(${empty})`,
-        }}>
-            <div className={s.cardInner}>
-              <div>
-              </div>
-              <div>
-              </div>
-            </div>
-          </div>
-          </div>
-          
+      <section className={s.rightSection}>
       </section>
           </div>
     </>

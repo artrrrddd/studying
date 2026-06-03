@@ -23,7 +23,7 @@ function AppRoutes() {
 
   return (
     <>
-      { !isComparison && <Header /> }
+      {/* { !isComparison && <Header /> } */}
       <Routes>
         <Route path="*" element={<MainPage />} />
         <Route path="create" element={<Create />} />
