@@ -3,7 +3,7 @@ import s from './mainpage.module.css'
 import { Link } from "react-router-dom";
 
 
-import LessonCard from './lessonCard'
+import LessonCard from './LessonCard'
 
 import blueNote from '../../public/blueNote.webp'
 import pinkNote from '../../public/pinkNote.webp'
