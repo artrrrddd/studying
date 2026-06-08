@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom"
 import MainPage from './components/MainPage'
 import Create from './components/Create'
@@ -15,17 +15,23 @@ import Lesson from './components/Lesson'
 import LessonExportPage from './components/LessonExportPage'
 import ComparisonMode from './components/ComparisonMode'
 import CannonGame from './components/CannonGame'
+import PromoPage from './components/PromoPage'
 
 function AppRoutes() {
 
   const location = useLocation();
   const isComparison = location.pathname.endsWith('comparison')
+  const isLogged = useSelector(s => s.auth.isLogged)
 
   return (
     <>
       {/* { !isComparison && <Header /> } */}
       <Routes>
-        <Route path="*" element={<MainPage />} />
+        {
+          isLogged ?
+          <Route path="*" element={<MainPage />} /> :
+          <Route path="*" element={<PromoPage />} />
+        }
         <Route path="create" element={<Create />} />
         <Route path="auth" element={<AuthPage />} />
         <Route path="signup" element={<SignUp />} />

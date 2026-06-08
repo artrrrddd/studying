@@ -3,6 +3,7 @@ import s from './myAccount.module.css'
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyLessonsThunk } from "../redux/thunks/lessonThunks";
 import { Link } from "react-router-dom";
+import { logoutThunk } from "../redux/thunks/authThunks";
 
 const MyAccount = () => {
 
@@ -24,8 +25,10 @@ const MyAccount = () => {
                     <Link to={`/lessons/${e.id}`}>
                 <div className={s.link} key={e.id}>{e.title}</div>
                     </Link>
+                    
                 </div>
             )  : <div>нет уроков</div>}
+            <button className={s.navBtn} onClick={() => { dispatch(logoutThunk())}}>Выйти</button>
             </div>
         </div>
     )

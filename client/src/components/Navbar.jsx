@@ -1,6 +1,4 @@
 import { useSelector } from "react-redux"
-import { useDispatch } from "react-redux"
-import { logoutThunk } from "../redux/thunks/authThunks";
 import { Link } from "react-router-dom";
 import logo from '../../public/logo.webp'
 
@@ -9,7 +7,6 @@ import s from './mainpage.module.css'
 const Navbar = () => {
 
   const isLogged = useSelector(s => s.auth.isLogged)
-  const dispatch = useDispatch()
 
     return (
         <section className={s.navSection}>
@@ -40,12 +37,12 @@ const Navbar = () => {
                             <Link to='/myAccount'>
                                 <button className={s.navBtn}>Личный кабинет</button>
                             </Link>
-                            <button className={s.navBtn} onClick={() => { dispatch(logoutThunk())}}>Выйти</button>
+                            
                         </div>
                     ) : (
                       <Link to='/auth'>
                             <button className={s.navBtn}>Войти</button>
-                        </Link>
+                      </Link>
                     )}
           </div>
       </section>
