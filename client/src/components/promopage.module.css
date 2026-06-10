@@ -1,73 +1,316 @@
-.mascot {
-  background-image: var(--note-image);
+.page {
   position: relative;
-  z-index: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 200px;
-  height: 200px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  transition: transform 180ms ease;
-  transform-origin: right bottom;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 91% 8%, rgba(190, 186, 255, 0.5), transparent 42%),
+    radial-gradient(circle at 18% 88%, rgba(190, 186, 255, 0.52), transparent 36%),
+    radial-gradient(circle at 24% 34%, rgba(218, 216, 255, 0.48), transparent 35%),
+    radial-gradient(circle at 76% 12%, rgba(255, 255, 255, 0.96), transparent 39%),
+    linear-gradient(135deg, #f7f8ff 0%, #edeefe 48%, #ffffff 100%);
 }
 
-.logo {
-  background-image: var(--note-image);
-  position: relative;
-  z-index: 0;
+/* .page::-webkit-scrollbar {
+  display: none;
+} */
+
+.btnsCont {
   display: flex;
-  justify-content: center;
+  gap:  17px;
+}
+
+.header {
+  padding-right: 3.98dvw;
+  display: flex;
   align-items: center;
-  width: 180px;
-  height: 60px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  transition: transform 180ms ease;
-  transform-origin: right bottom;
+  justify-content: space-between;
+  padding-left: 1.48dvw;
+  width: 100dvw;
+  height: 13.85dvh;
 }
 
-.mainGrid {
-    display: grid;
-    grid-template-rows: calc(55dvh - 0.8dvw - 0.5dvh) calc(30dvh - 0.8dvw - 0.5dvh) 15dvh;
-    margin: 0.8dvw;
-    gap: 0.5dvh;
-    width: calc(100dvw - 1.6dvw);
+.contForHeaderAndMain {
+  display: flex;
+  flex-direction: column;
+  gap: 0.96dvh;
 }
 
-.top {
-  border-radius: 10px;
+.main {
+  display: flex;
+  height: 85.19dvh;
+}
+
+.navbar {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0.75dvw;
+  width: 9.47dvw;
+  padding: 17px 0 62px 0;
+  overflow: visible;
 }
 
-.btn {
-  height: 100%;
-  border: solid 0.5px #eadfcd;
+.navBtns {
+  align-items: center;
+  gap: 17px;
+  display: flex;
+  flex-direction: column;
 }
 
-.btn:hover {
-  border: solid 0.5px #eadfcd;
+.navBtn {
+  width: 45px;
+  height: 45px;
+
+  border: none;
+  background: none;
+  padding: 0;
+
+  position: relative;
+  overflow: visible;
+  cursor: pointer;
 }
 
-.middle {
-  background-color: #FEFAF5;
-  border-radius: 10px;
+.navPanel {
+  position: absolute;
+  top: 0;
+  left: -55px;
+
+  width: 155px;
+  height: 45px;
+
+  pointer-events: none;
 }
 
-.bot {
-  background-color: #FEFAF5;
-  border-radius: 10px;
+.navPanel::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 55px;
+
+  width: 45px;
+  height: 45px;
+
+  border-radius: 12px;
+
+  transition:
+    left 0.1s ease,
+    width 0.1s ease,
 }
 
-.topBot {
-  background-color: #fff;
+.navBtn:hover .navPanel::before {
+  left: 0;
+  width: 155px;
+}
+
+.navIcon {
+  width: 24px;
+
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 77.5px;
+
+  transform: translate(-50%, -50%);
+
+  transition: left 0.3s ease;
+}
+
+.navBtn:hover .navIcon {
+  left: 27px;
+}
+
+.navText {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 58px;
+
+  transform: translateY(-50%);
+
+  font-size: 16px;
+  color: #111;
+  white-space: nowrap;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity 0.25s ease 0.12s;
+}
+
+.navBtn:hover .navText {
+  opacity: 1;
+}
+
+.contForNavAndSect {
+  display: flex;
+  gap: 0.69dvw;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8dvh;
+  width: 89.83dvw;
+}
+
+.sectionTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 12.42dvh;
+  width: 100%;
+}
+
+/* .sectionBot {
+  display: grid;
+  grid-template-columns: 36.58dvw 23.72dvw 26.15dvw;
+  grid-template-rows: 42.2dvh 28.66dvh;
+  height: 71.97dvh;
+  width: 89.83dvw;
+} */
+
+.sectionBot {
+  display: flex;
+  flex-direction: column;
+  height: 72.78dvh;
+  gap: 7px;
+  width: 100%;
+  padding-right: 3.98dvw;
+}
+
+.sectionBotTopRow {
+  display: flex;
+  align-items: end;
+  height: 60.64%;
+  gap: 7px;
+  width: 100%;
+}
+
+.topRowInSection {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  align-items: end;
+}
+
+.leftWidget {
+  width: 41.68%;
+  height: 42.2dvh;
+  position: relative;
   display: flex;
   justify-content: center;
-  width: 65%;
+  align-items: center;
+  background-image: url("/Union1.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+}
+
+.betweenWidget {
+  border-radius: 10px;
+  width: calc(7px + 26.87%);
+  height: 40.61dvh;
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+.rightWidget {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 29.87%;
+  min-height: 42.2dvh;
+  background-image: url("/Union2.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+}
+
+.rightWidgetOverlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 7%;
+  width: 95%;
+  height: 90%;
+  z-index: 1;
+}
+
+.leftWidgetOverlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 7%;
+  width: 95%;
+  height: 90%;
+  z-index: 1;
+}
+
+.sectionBotBotRow {
+  display: flex;
+  height: 39.36%;
+  gap: 7px;
+  width: 100%;
+} 
+
+.botRightWidget {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px 10px 0 0;
+  min-width: 57.55%;
+  height: auto;
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+.botLeftWidget {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 41.68%;
+  border-radius: 10px 10px 0 0;
+  height: auto;
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+.hText {
+  font-family: var(--font-display);
+  font-size: 50px;
+  font-weight: medium;
+}
+
+.smallH {
+  color: #828282;
+  font-size: 16px;
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+.lessonWidget {
+  display: flex;
+  border-radius: 10px;
+  width: calc(19.39886dvw - 24.5px);
+  background-color: rgba(255, 255, 255, 0.35);
+  height: 8.8dvh;
+}
+
+.croppedLessonWidget {
+  display: flex;
+  border-radius: 10px;
+  width: 12.47dvw;
+  background-color: rgba(255, 255, 255, 0.35);
+  height: 8.8dvh;
+}
+
+.plus {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #3C3D44;
+  border-radius: 10px;
+  width: 2.78dvw;
+  height: 8.8dvh;
 }
