@@ -104,7 +104,7 @@ const PromoPage = () => {
 
           <div className={s.sectionTop}>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'start'}}>
-            <div className={s.hText}>Welcome, Baribina!</div>
+            <div className={s.hText}>Welcome, Mauve Gnoll!</div>
             <div className={s.smallH}>Personal daily routine dashboard</div>
             </div>
             <div>
