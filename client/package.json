@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@daily-co/daily-js": "^0.91.0",
+    "@daily-co/daily-react": "^0.25.2",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/react": "^0.3.2",
     "@dnd-kit/sortable": "^10.0.0",
@@ -20,6 +22,7 @@
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.13.4",
     "html2canvas": "^1.4.1",
+    "lucide-react": "^1.18.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-redux": "^9.2.0",

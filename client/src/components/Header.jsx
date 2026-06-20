@@ -24,6 +24,9 @@ const Header = () => {
                     <Link to="/lessons" onClick={closeMenu}>
                         <button>Уроки</button>
                     </Link>
+                    <Link to="/calls" onClick={closeMenu}>
+                        <button>Calls</button>
+                    </Link>
                 </div>
                 <div className={s.functionalWrap}>
                     {isLogged ? (

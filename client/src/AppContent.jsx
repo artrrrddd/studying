@@ -16,6 +16,10 @@ import LessonExportPage from './components/LessonExportPage'
 import ComparisonMode from './components/ComparisonMode'
 import CannonGame from './components/CannonGame'
 import PromoPage from './components/PromoPage'
+import CallsPage from './components/calls/CallsPage'
+import CreateCallPage from './components/calls/CreateCallPage'
+import CallRoomPage from './components/calls/CallRoomPage'
+import JoinCallByInvitePage from './components/calls/JoinCallByInvitePage'
 
 function AppRoutes() {
 
@@ -42,6 +46,10 @@ function AppRoutes() {
         <Route path="lessons/:id" element={<Lesson/>}/>
         <Route path="lessons/:id/comparison" element={<ComparisonMode />}/>
         <Route path="lessons/:id/cannon" element={<CannonGame />}/>
+        <Route path="calls" element={<CallsPage />} />
+        <Route path="calls/new" element={<CreateCallPage />} />
+        <Route path="calls/join/:inviteCode" element={<JoinCallByInvitePage />} />
+        <Route path="calls/:id" element={<CallRoomPage />} />
       </Routes>
     </>
   )

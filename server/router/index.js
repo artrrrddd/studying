@@ -3,6 +3,7 @@ const UserController = require('../controllers/user-controller');
 const CardController = require('../controllers/card-controller');
 const LessonController = require('../controllers/lesson-controller');
 const ExportController = require('../controllers/export-controller');
+const CallController = require('../controllers/call-controller');
 const router = new Router();
 const { body } = require('express-validator');
 const authMiddleware = require('../middleware/auth-middleware');
@@ -65,5 +66,25 @@ router.patch(
 );
 
 router.delete('/lessons/:id', authMiddleware, LessonController.delete);
+
+/* ================== CALL ROUTES ================== */
+
+router.post('/calls', authMiddleware, CallController.create);
+router.get('/calls', authMiddleware, CallController.getMine);
+router.get('/calls/:id', authMiddleware, CallController.getById);
+router.post('/calls/:id/join', authMiddleware, CallController.join);
+router.post('/calls/:id/invites', authMiddleware, CallController.createInvite);
+router.post('/calls/join-by-code', authMiddleware, CallController.joinByCode);
+router.post('/calls/:id/end', authMiddleware, CallController.end);
+router.patch(
+  '/calls/:id/participants/:userId/permissions',
+  authMiddleware,
+  CallController.updateParticipantPermissions
+);
+router.delete(
+  '/calls/:id/participants/:userId',
+  authMiddleware,
+  CallController.removeParticipant
+);
 
 module.exports = router;

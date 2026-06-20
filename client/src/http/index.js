@@ -23,6 +23,7 @@ $api.interceptors.response.use((config) => {
     // // Не пытаться обновлять токен при 401 с логина/регистрации/refresh — иначе «неверный пароль» превращается в «не авторизован»
     // const path = (originalRequest.url || '').replace(API_URL, '').replace(/^\//, '') || '';
     // const isAuthEndpoint = ['login', 'registration', 'refresh'].some((p) => path === p || path.startsWith(p + '/'));
+    
     if (error.response?.status === 401 && !originalRequest._isRetry) {
         originalRequest._isRetry = true;
         try {

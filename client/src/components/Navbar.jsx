@@ -26,6 +26,9 @@ const Navbar = () => {
         <Link to='/lessons'>
           <button className={s.navBtn}>Уроки</button>
         </Link>
+        <Link to='/calls'>
+          <button className={s.navBtn}>Calls</button>
+        </Link>
         <Link to='/create'>
           <button className={s.navBtn}>Создать урок</button>
         </Link>
